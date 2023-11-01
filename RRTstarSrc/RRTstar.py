@@ -1,8 +1,7 @@
 from RRTsubfunc import *
 
-def rrtStar(nodes, start, goal, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, threshold):
-    if nodes:
-        nodes = [start]
+def rrtStar(nodes, goal, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler):
+
     for _ in range(iterations):
         randNode = getRandomNode(mapMaxSize, possibleVelocity)
         nearestNode = getNearestNode(nodes, randNode)
@@ -15,13 +14,7 @@ def rrtStar(nodes, start, goal, iterations, stepSize, mapMaxSize, possibleVeloci
             rewireNearNodes(nearNodes, newNode)
             nodes.append(newNode)
             
-            # Check if the goal is reached
-            if isGoalReached(newNode, goal, threshold):
-                print("Goal reached!")
-                return nodes, newNode  # or you might return a path, depending on your use case
-        
-    print("Goal not reached within the specified iterations.")
-    return nodes, False  # or you might return None or an empty path, depending on your use case   
+    return nodes
 
 
     
