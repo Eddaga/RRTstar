@@ -13,7 +13,8 @@ def getRandomNode(mapData, possibleVelocity):
 
 # this function is consider for all nodes.
 def getNearestNode(nodes, randNode):
-    nearestNode = min(nodes, key=lambda node: getTimeSteer(node, randNode))
+    nearestNode = min((node for node in nodes if getTimeSteer(node, randNode) > 0), 
+                      key=lambda node: getTimeSteer(node, randNode), default=None)
     return nearestNode
 
 #deal with integrize
@@ -75,8 +76,15 @@ def isNewNodeObstacleFree(newNode, nearestNode, mapData, scaler):
         return True
 
 # this function is consider for all nodes.
-def getNearNodes(nodes, newNode, stepSize):
-    nearNodes = [node for node in nodes if getTimeSteer(node, newNode) < stepSize]
+def getNearNodes(nodes, newNode, stepSize, distance_threshold=1e-6):
+    nearNodes = []
+    for node in nodes:
+        # 시간 스티어를 통해 노드가 주어진 범위 내에 있는지 확인
+        if getTimeSteer(node, newNode) < stepSize:
+            # 두 노드 사이의 유클리드 거리 계산
+            euclidean_distance = getDistance(node, newNode)
+            if euclidean_distance > distance_threshold:
+                nearNodes.append(node)
     return nearNodes
 # add code which consider radius node.(after add grid options..?)
 

@@ -46,8 +46,8 @@ def main():
 
     tree = rrtStar(tree, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
     while True:
-        user_input = get_input_with_timeout("Enter something within 5 seconds: ", 1)
         print("1 set iteration end. you want to do make it again?")
+        user_input = get_input_with_timeout("If you wan to stop, enter something within 1 seconds: ", 1)
         if user_input:
             print(f"You entered: {user_input}")
             break

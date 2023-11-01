@@ -12,6 +12,8 @@ def getDistance(node1, node2):
     return np.sqrt((node1.x - node2.x) ** 2 + (node1.y - node2.y) ** 2)
 
 def getTimeSteer(node1, node2):
+    if node1.x == node2.x and node1.y == node2.y:
+        return float('inf')
     return getDistance(node1, node2) / ( (node1.velocity + node2.velocity) / 2 )
 
 def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
