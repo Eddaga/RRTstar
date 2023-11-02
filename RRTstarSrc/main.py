@@ -11,14 +11,8 @@ def get_input_with_timeout(prompt, timeout):
         return sys.stdin.readline().strip()
     return None
 
-def plot_tree(nodes, newNode, goal):
-    # plt.clf()  # 현재 피규어를 클리어하지 마세요
-    for node in nodes:
-        if node.parent is not None:
-            plt.plot([node.x, node.parent.x], [node.y, node.parent.y], 'b-')
-    plt.plot(newNode.x, newNode.y, 'go', label='새 노드')  # 새 노드는 녹색 점으로 표시
-    plt.pause(0.01)  # 플롯을 업데이트 하기 위해 잠시 멈춤
-    
+
+
 def main():
     start = Node(850, 1000, 1)
     goal = Node(150, 1000, 0)
@@ -30,10 +24,14 @@ def main():
     mapPath = "../MAP.jpg"
     # tree = treeLoader()
 
-    plt.ion()  # 인터랙티브 플로팅 시작
+    
 
     print("RRTstar Algorithm Start. Please Load MapData Please")
     mapData, scaler = getMapData(mapPath)
+
+    
+    plt.ion()  # 인터랙티브 플로팅 시작
+    plot_map(mapData, scaler)
 
     print("Load Exist Tree or Make New Tree?")
     while 1:
