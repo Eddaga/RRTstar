@@ -1,4 +1,9 @@
 from RRTsubfunc import *
+import matplotlib.pyplot as plt
+
+
+
+
 
 def rrtStar(nodes, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold):
 
