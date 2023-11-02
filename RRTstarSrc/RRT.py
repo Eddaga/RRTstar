@@ -1,7 +1,14 @@
 from RRTsubfunc import *
 import matplotlib.pyplot as plt
 
+def plot_map(mapData, scaler):
+    # mapData가 장애물의 위치를 포함하고 있다고 가정합니다.
+    # 이를 기반으로 지도 위에 장애물을 플롯합니다.
+    for obstacle in mapData:
+        # 장애물의 크기와 위치를 고려하여 장애물을 플롯
+        plt.gca().add_patch(plt.Rectangle((obstacle[0]*scaler, obstacle[1]*scaler), obstacle[2]*scaler, obstacle[3]*scaler, color='red'))
 
+        
 def plot_tree(nodes, newNode, goal):
     # plt.clf()  # 현재 피규어를 클리어하지 마세요
     for node in nodes:
