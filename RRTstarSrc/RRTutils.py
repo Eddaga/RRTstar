@@ -17,6 +17,7 @@ def getTimeSteer(node1, node2):
     return getDistance(node1, node2) / ( (node1.velocity + node2.velocity) / 2 )
 
 def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
+    
     ddX = int(np.floor(newNode.x / scaler) * scaler)
     ddY = int(np.floor(newNode.y / scaler) * scaler)
 
@@ -56,5 +57,6 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
     
     # inside 인 점 중에서 newNode랑 가장 가까운 점 -> newNode
     else:
+
         newNode = min(intNodeInTime, key=lambda node: getTimeSteer(node, newNode))
         return newNode

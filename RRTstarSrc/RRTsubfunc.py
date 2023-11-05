@@ -4,7 +4,8 @@ import random
 
 #deal with integrize
 def getRandomNode(mapData, possibleVelocity):
-    newNodeCoordinate = random.choice(mapData)
+    mapTotalDots = mapData[0] + mapData[1]
+    newNodeCoordinate = random.choice(mapTotalDots)
     randomNode = Node(newNodeCoordinate[0], 
                       newNodeCoordinate[1], 
                       np.random.randint(0, possibleVelocity)) # Question1. how can i cnofigure possibleVelocity?? 20230807 kyuyong park.
@@ -21,7 +22,8 @@ def getNearestNode(nodes, randNode):
 def getNewNode(nearestNode, randNode, stepSize, scaler):
     newNode = Node(nearestNode.x, nearestNode.y, nearestNode.velocity) # create new node and init as dummy value.
     timeSteer = getTimeSteer(randNode, nearestNode)
-    
+    if timeSteer == float('inf'):
+        return False
     # get nearestNode From Real Number
     if timeSteer > stepSize:
         acceleration = (randNode.velocity - nearestNode.velocity) / timeSteer # Accel = (V_1 - V_2)/ time, so calculation is (nearestNodeVelocity - randNodeVelocity) / time, to move from nearsetNode to randNode.
