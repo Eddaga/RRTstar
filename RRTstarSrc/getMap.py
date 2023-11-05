@@ -26,9 +26,11 @@ def getMapData(path,realDistance):
     
     for i in range(0, imagePixel, int(scaler)):
         for j in range(0 , imagePixel, int(scaler)):
-            if binaryNP[i, j] == 1:  # black pixel
+            if binaryNP[i, j] == 0:  # 검은 픽셀 - 트랙
+                print(i,j)
                 blackList.append((i, j))
-            else:  # white pixel
+            else:  # 흰 픽셀 - 장애물
                 whiteList.append((i, j))
     mapData = [blackList, whiteList]
+    
     return mapData, scaler

@@ -17,24 +17,18 @@ def plotMap(mapData, scaler):
     # 흑색 픽셀과 백색 픽셀의 위치 목록을 얻습니다.
     blackList, whiteList = mapData
     print(len(blackList))
-    i = 1
-    j = 1
     # 흑색 픽셀을 그립니다.
     xCoords = []
     yCoords = []
 
     # Loop through each point in the blackList
     for point in blackList:
-        if i == 100:
-            i = 1
-            j = j+1
-            print(j*100,"/",len(blackList))
-        i = i+1    
+  
 
-        x = point[1]
+        x = point[0]
         xCoords.append(x)  
         
-        y = point[0]
+        y = point[1]
         yCoords.append(y) 
 
     # Plot all points at once
@@ -47,13 +41,13 @@ def plotMap(mapData, scaler):
 
 
 def main():
-    start = Node(930, 570, 1)
-    goal = Node(930, 610, 0)
+    start = Node(1200- 570,930, 1)
+    goal = Node(1200- 610,930, 0)
     iterations = 1000
-    stepSize = 5
+    stepSize = 1
     mapMaxSize = [1200, 1200]
     possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
-    threshold = 15 #for isGoalReached(euclidian distance)
+    threshold = 10 #for isGoalReached(euclidian distance)
     mapPath = "../mapImage/9track2.png"
     realDistance = 1200
     # tree = treeLoader()
@@ -100,7 +94,7 @@ def main():
         #    break
         #else:
         tree = rrtStar(tree, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
-    print("hello!")
+    print(len(tree))
     plt.ioff()  # 모든 것이 끝나면 인터랙티브 플로팅을 끕니다
 
     plt.show()  # 최종 플롯을 표시합니다
