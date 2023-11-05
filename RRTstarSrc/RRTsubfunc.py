@@ -48,7 +48,7 @@ def getNewNode(nearestNode, randNode, stepSize, scaler):
 #deal with integrize
 def isNodeOnObstacle(newNode, MapData):
     if (newNode.x, newNode.y) in MapData[1]:
-        print(newNode.x,newNode.y,"in")
+        
         return False
     else:
         #print(newNode.x,newNode.y,"out")
@@ -67,7 +67,7 @@ def isNodeSteerOnObstacle(node1, node2, MapData, scaler):
         y = y1 + i * scaler * (y2 - y1) / distance
         
         x, y = round(x), round(y)
-        
+        print(x,y)
         if (x, y) in MapData[0]:  # MapData[1] is white
             return True
     
@@ -83,7 +83,7 @@ def isNewNodeObstacleFree(newNode, nearestNode, mapData, scaler):
         
         return False
     else:
-        print(newNode.x,newNode.y)
+        
         return True
 
 # this function is consider for all nodes.

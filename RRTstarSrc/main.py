@@ -41,10 +41,10 @@ def plotMap(mapData, scaler):
 
 
 def main():
-    start = Node(1200- 570,930, 1)
-    goal = Node(1200- 610,930, 0)
+    start = Node(1200- 530,925, 1)
+    goal = Node(1200- 640,925, 0)
     iterations = 1000
-    stepSize = 5
+    stepSize = 1.5
     mapMaxSize = [1200, 1200]
     possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
     threshold = 10 #for isGoalReached(euclidian distance)
