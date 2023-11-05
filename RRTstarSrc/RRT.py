@@ -1,21 +1,25 @@
 from RRTsubfunc import *
 import matplotlib.pyplot as plt
 
-def plot_map(mapData, scaler):
-    # mapData가 장애물의 위치를 포함하고 있다고 가정합니다.
-    # 이를 기반으로 지도 위에 장애물을 플롯합니다.
-    for obstacle in mapData:
-        # 장애물의 크기와 위치를 고려하여 장애물을 플롯
-        plt.gca().add_patch(plt.Rectangle((obstacle[0]*scaler, obstacle[1]*scaler), obstacle[2]*scaler, obstacle[3]*scaler, color='red'))
+
 
         
-def plot_tree(nodes, newNode, goal):
-    # plt.clf()  # 현재 피규어를 클리어하지 마세요
-    for node in nodes:
-        if node.parent is not None:
-            plt.plot([node.x, node.parent.x], [node.y, node.parent.y], 'b-')
-    plt.plot(newNode.x, newNode.y, 'go', label='새 노드')  # 새 노드는 녹색 점으로 표시
-    plt.pause(0.01)  # 플롯을 업데이트 하기 위해 잠시 멈춤
+def plot_map(map_data, scaler):
+    fig, ax = plt.subplots(figsize=(10, 10))
+    ax.set_aspect('equal')
+    
+    black_list, white_list = map_data
+    
+    # Assuming that the map data is normalized to a grid where each cell represents 'domain' meters
+    for coord in black_list:
+        rect = plt.Rectangle((coord[1]/scaler, coord[0]/scaler), 1, 1, color='black')
+        ax.add_patch(rect)
+
+    plt.xlim(0, int(np.ceil(len(map_data[1])/scaler)))
+    plt.ylim(0, int(np.ceil(len(map_data[1])/scaler)))
+    plt.xlabel('meters')
+    plt.ylabel('meters')
+    plt.grid(True)
 
 
 def rrtStar(nodes, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold):
