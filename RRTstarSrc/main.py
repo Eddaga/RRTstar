@@ -50,10 +50,10 @@ def main():
     start = Node(930, 570, 1)
     goal = Node(930, 610, 0)
     iterations = 1000
-    stepSize = 2 # 0.277777hour = 10sec
-    mapMaxSize = [1000, 2000]
-    possibleVelocity = 42# 150.0 km/h * 100 / 3600 = 41.16667m/s
-    threshold = 6
+    stepSize = 5
+    mapMaxSize = [1200, 1200]
+    possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
+    threshold = 15 #for isGoalReached(euclidian distance)
     mapPath = "../mapImage/9track2.png"
     realDistance = 1200
     # tree = treeLoader()
@@ -94,12 +94,12 @@ def main():
     tree = rrtStar(tree, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
 
     while True:
-        user_input = get_input_with_timeout("1 set iteration end. If you wan to stop, enter something within 1 seconds: ", 0.1)
-        if user_input:
-            print(f"You entered: {user_input}")
-            break
-        else:
-            tree = rrtStar(tree, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
+        #user_input = get_input_with_timeout("1 set iteration end. If you wan to stop, enter something within 1 seconds: ", 0.1)
+        #if user_input:
+        #    print(f"You entered: {user_input}")
+        #    break
+        #else:
+        tree = rrtStar(tree, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
     print("hello!")
     plt.ioff()  # 모든 것이 끝나면 인터랙티브 플로팅을 끕니다
 

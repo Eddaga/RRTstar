@@ -8,7 +8,7 @@ def getRandomNode(mapData, possibleVelocity):
     newNodeCoordinate = random.choice(mapTotalDots)
     randomNode = Node(newNodeCoordinate[0], 
                       newNodeCoordinate[1], 
-                      np.random.randint(0, possibleVelocity)) # Question1. how can i cnofigure possibleVelocity?? 20230807 kyuyong park.
+                      np.random.randint(39,40))#(0, possibleVelocity)) # Question1. how can i cnofigure possibleVelocity?? 20230807 kyuyong park.
     # 150.0 km/h
     return randomNode
 
@@ -22,6 +22,7 @@ def getNearestNode(nodes, randNode):
 def getNewNode(nearestNode, randNode, stepSize, scaler):
     newNode = Node(nearestNode.x, nearestNode.y, nearestNode.velocity) # create new node and init as dummy value.
     timeSteer = getTimeSteer(randNode, nearestNode)
+    
     if timeSteer == float('inf'):
         return False
     # get nearestNode From Real Number
@@ -33,20 +34,23 @@ def getNewNode(nearestNode, randNode, stepSize, scaler):
         newNode.x += (randNode.x - nearestNode.x) * deltaDistance / distance # dx * ( distance / delta Distance) -> x + delta x
         newNode.y += (randNode.y - nearestNode.y) * deltaDistance / distance # dy * ( distance / delta Distance) -> y + delta y
         newNode.velocity = deltaVelocity
+        
     #change it to integer            
         newNode = newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize)
+        
     else:
         newNode.x = randNode.x
         newNode.y = randNode.y
         newNode.velocity = randNode.velocity
+        #print("<case, ",newNode.x," ",newNode.y," ",newNode.velocity)
     return newNode
 
 #deal with integrize
 def isNodeOnObstacle(newNode, MapData):
     if (newNode.x, newNode.y) in MapData[0]:  
-        return True
-    else:
         return False
+    else:
+        return True
 
 #deal with integrize
 def isNodeSteerOnObstacle(node1, node2, MapData, scaler):
@@ -71,14 +75,17 @@ def isNodeSteerOnObstacle(node1, node2, MapData, scaler):
 #deal with integrize
 def isNewNodeObstacleFree(newNode, nearestNode, mapData, scaler):
     if isNodeOnObstacle(newNode, mapData):
+        
         return False
     if isNodeSteerOnObstacle(newNode, nearestNode, mapData, scaler):
+        
         return False
     else:
+        
         return True
 
 # this function is consider for all nodes.
-def getNearNodes(nodes, newNode, stepSize, distance_threshold=1e-6):
+def getNearNodes(nodes, newNode, stepSize, distance_threshold=0):
     nearNodes = []
     for node in nodes:
         # 시간 스티어를 통해 노드가 주어진 범위 내에 있는지 확인

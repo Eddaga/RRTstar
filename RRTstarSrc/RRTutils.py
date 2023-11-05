@@ -29,7 +29,7 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
 
     uuX = int(np.ceil(newNode.x / scaler) * scaler)
     uuY = int(np.ceil(newNode.y / scaler) * scaler)
-
+    
     # V^2 = (V_0)^2 + 2as //
     ddDistance = np.sqrt((nearestNode.x - ddX) ** 2 + (nearestNode.y - ddY) ** 2) 
     ddv = int(round(np.sqrt(pow(nearestNode.velocity,2) + (2*acceleration * ddDistance))))
@@ -46,7 +46,7 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
     uuDistance = np.sqrt((nearestNode.x - uuX) ** 2 + (nearestNode.y - uuY) ** 2)
     uuv = int(round(np.sqrt(pow(nearestNode.velocity,2) + (2*acceleration * uuDistance))))
     uu = Node(uuX,uuY,uuv)
-  
+    
     # 4점 중 inside인 점 찾기
     intNodes = [dd, ud, du, uu]
     intNodeInTime = [intNode for intNode in intNodes if getTimeSteer(intNode, nearestNode) < stepSize ]
@@ -55,8 +55,9 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
     if not intNodeInTime:
         return False
     
-    # inside 인 점 중에서 newNode랑 가장 가까운 점 -> newNode
+    # inside 인 점 중에서 newNode랑 가장 먼 점 -> newNode
     else:
 
-        newNode = min(intNodeInTime, key=lambda node: getTimeSteer(node, newNode))
+        newNode = max(intNodeInTime, key=lambda node: getTimeSteer(node, newNode))
+        
         return newNode

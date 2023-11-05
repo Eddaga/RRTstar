@@ -17,7 +17,7 @@ def getMapData(path,realDistance):
 
     imagePixel = rows
     #realDistance = 1200 # it means 1200m
-    domain = 10 # grid scalse as 2m.
+    domain = 10 # grid scalse as 10m.
     scaler = imagePixel / realDistance * domain
 
     # 3. make black list 
