@@ -8,7 +8,7 @@ def getRandomNode(mapData, possibleVelocity):
     newNodeCoordinate = random.choice(mapTotalDots)
     randomNode = Node(newNodeCoordinate[0], 
                       newNodeCoordinate[1], 
-                      np.random.randint(0,40))#(0, possibleVelocity)) # Question1. how can i cnofigure possibleVelocity?? 20230807 kyuyong park.
+                      np.random.randint(1,40))#(0, possibleVelocity)) # Question1. how can i cnofigure possibleVelocity?? 20230807 kyuyong park.
     # 150.0 km/h
     return randomNode
 
