@@ -1,12 +1,12 @@
 from RRTsubfunc import *
 import matplotlib.pyplot as plt
-
+from main import plotMap
 
 
         
-def plot_tree(nodes, newNode, goal):
-    #plt.clf()  # 현재 피규어를 클리어하지 마세요
-    
+def plot_tree(nodes, newNode, mapData):
+    plt.clf()  # 현재 피규어를 클리어하지 마세요
+    plotMap(mapData)
     for node in nodes:
         if node.parent is not None:
             plt.plot([node.x, node.parent.x], [node.y, node.parent.y], 'b-')
@@ -30,7 +30,7 @@ def rrtStar(nodes, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, 
             rewireNearNodes(nearNodes, newNode)
             nodes.append(newNode)
             #print("hello",newNode.x, newNode.y, newNode.velocity)
-            plot_tree(nodes, newNode, goal)  # 현재 트리를 플롯
+            plot_tree(nodes, newNode, mapData)  # 현재 트리를 플롯
 
     # Check if the goal is reached
             if newNode and isGoalReached(newNode, goal, threshold):

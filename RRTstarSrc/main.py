@@ -12,7 +12,7 @@ def get_input_with_timeout(prompt, timeout):
     return None
 
 
-def plotMap(mapData, scaler):
+def plotMap(mapData):
 
     # 흑색 픽셀과 백색 픽셀의 위치 목록을 얻습니다.
     blackList, whiteList = mapData
@@ -62,7 +62,7 @@ def main():
     plt.xlim([0, 1200])
     plt.ylim([0, 1200])
   
-    plotMap(mapData, scaler)
+    plotMap(mapData)
     
     
 
