@@ -55,9 +55,9 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
     if not intNodeInTime:
         return False
     
-    # inside 인 점 중에서 newNode랑 가장 먼 점 -> newNode
+    # inside 인 점 중에서 newNode랑 가장 가까운 점 -> newNode
     else:
 
-        newNode = max(intNodeInTime, key=lambda node: getTimeSteer(node, newNode))
+        newNode = min(intNodeInTime, key=lambda node: getTimeSteer(node, newNode))
         
         return newNode
