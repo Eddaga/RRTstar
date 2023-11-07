@@ -44,10 +44,10 @@ def main():
     start = Node(1200- 530,925, 1)
     goal = Node(1200- 640,925, 0)
     iterations = 1000
-    stepSize = 1.5
+    stepSize = 0.5
     mapMaxSize = [1200, 1200]
     possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
-    threshold = 10 #for isGoalReached(euclidian distance)
+    threshold = 50 #for isGoalReached(euclidian distance)
     mapPath = "../mapImage/9track2.png"
     realDistance = 1200
     # tree = treeLoader()
@@ -62,7 +62,7 @@ def main():
     plt.xlim([0, 1200])
     plt.ylim([0, 1200])
   
-    plotMap(mapData)
+    #plotMap(mapData)
     
     
 
