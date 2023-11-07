@@ -1,5 +1,5 @@
 import RRTutils
-
+# import MLP~~
 def mlpParameters(node1,node2):
     velocity = (node1.velocity + node2.velocity) / 2
     # deal accelPress as torqueMode.. so accelPress = accelration
@@ -9,4 +9,9 @@ def mlpParameters(node1,node2):
     return accelPress, velocity, tilt
 
 
-def 
+
+'''
+def asklbval(import powermodels(MLP~~~)
+
+    return P~~
+'''
