@@ -1,7 +1,7 @@
 from RRTsubfunc import *
 import matplotlib.pyplot as plt
 from main import plotMap
-
+from powerCal import *
 
         
 def plot_tree(nodes, newNode, mapData, goal):
@@ -20,7 +20,7 @@ def plot_tree(nodes, newNode, mapData, goal):
     plt.pause(0.01)  # 플롯을 업데이트 하기 위해 잠시 멈춤
 
 
-def rrtStar(nodes, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold):
+def rrtStar(nodes, start, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold):
     
     for _ in range(iterations):
         randNode = getRandomNode(mapData, possibleVelocity)
@@ -41,6 +41,7 @@ def rrtStar(nodes, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, 
             if newNode and isGoalReached(newNode, goal, threshold):
                 print("Goal reached!")
                 plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
+                getTotalPower(start,newNode)
                 return nodes
     
       

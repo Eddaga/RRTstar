@@ -16,7 +16,7 @@ def plotMap(mapData):
 
     # 흑색 픽셀과 백색 픽셀의 위치 목록을 얻습니다.
     blackList, whiteList = mapData
-    print(len(blackList))
+    #print(len(blackList))
     # 흑색 픽셀을 그립니다.
     xCoords = []
     yCoords = []
@@ -44,7 +44,7 @@ def main():
     start = Node(1200- 530,925, 1)
     goal = Node(1200- 640,925, 0)
     iterations = 1000
-    stepSize = 0.5
+    stepSize = 2#0.5
     mapMaxSize = [1200, 1200]
     possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
     threshold = 50 #for isGoalReached(euclidian distance)
@@ -85,7 +85,7 @@ def main():
         else:
             print("enter correct num please.")
 
-    tree = rrtStar(tree, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
+    tree = rrtStar(tree, start, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
 
     while True:
         #user_input = get_input_with_timeout("1 set iteration end. If you wan to stop, enter something within 1 seconds: ", 0.1)
@@ -93,7 +93,7 @@ def main():
         #    print(f"You entered: {user_input}")
         #    break
         #else:
-        tree = rrtStar(tree, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
+        tree = rrtStar(tree, start, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
     print(len(tree))
     plt.ioff()  # 모든 것이 끝나면 인터랙티브 플로팅을 끕니다
 

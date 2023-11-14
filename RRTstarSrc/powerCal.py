@@ -8,14 +8,25 @@ def getOptimalPath(startNode, newNode):
         optimalPath.insert(0,current)
         current = current.parent
     optimalPath.insert(0,startNode)
-    print(optimalPath[0].x," ",optimalPath[1].y)
     return optimalPath 
 
-def getTotalPower(startNode,goalNode):
-    optimalPath = getOptimalPath(startNode,goalNode)
-    
+def getMlpParams(childNode, parentNode):
+    accelPress = ((childNode.velocity + parendNode.velocity) / 2) / childNode.cost 
 
-    return Energy
+    return accelPress, Velocity, tilt
+
+
+def getTotalPower(startNode, newNode, goalNode):
+    optimalPath = getOptimalPath(startNode,newNode)
+    optimalPath = optimalPath.append(goalNode)
+    goalNode.parent = newNode
+    current = goalNode
+
+    while current.parent is not None:
+        getMlpParams
+        
+
+    
     
 
 def mlpParameters(currentNode):
@@ -28,8 +39,6 @@ def mlpParameters(currentNode):
     tilt = (currentNode.x - currentNode.parent.y) # kind of this function to get tilts
 
     return accelPress, velocity, tilt
-
-
 
 
 
