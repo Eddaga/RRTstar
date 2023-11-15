@@ -1,4 +1,5 @@
-import RRTutils
+from RRTutils import *
+import math
 # import MLP~~
 
 def getOptimalPath(startNode, newNode):
@@ -10,20 +11,28 @@ def getOptimalPath(startNode, newNode):
     optimalPath.insert(0,startNode)
     return optimalPath 
 
-def getMlpParams(childNode, parentNode):
-    accelPress = ((childNode.velocity + parendNode.velocity) / 2) / childNode.cost 
+def getMlpParams(childNode, parentNode, exNodeDegree):
+    velocity = ((childNode.velocity + parentNode.velocity) / 2)
+    accelPress = velocity / getTimeSteer(childNode, parentNode)
 
-    return accelPress, Velocity, tilt
+    # vehicle's tilt is opposite of theta, so add 90 maybe..?
+    childDegree = degrees(atan2( parentNode.y - childNode.y, parentNode.x - childNode.x))
+    parentDegree = degress(atan2( parentNode.parent.y - parentNode.y, parentNode.parent.x - parentNode.x))
+    tilt = childDegree - parentDegree
+    return accelPress, velocity, tilt
 
 
 def getTotalPower(startNode, newNode, goalNode):
     optimalPath = getOptimalPath(startNode,newNode)
-    optimalPath = optimalPath.append(goalNode)
-    goalNode.parent = newNode
-    current = goalNode
+    current = newNode
+    #optimalPath = optimalPath.append(goalNode)
+    #goalNode.parent = newNode
+    #current = goalNode
 
     while current.parent is not None:
-        getMlpParams
+        accelPress, velocity, tilt = getMlpParams(current, current.parent)
+        
+        current = current.parent
         
 
     
