@@ -40,8 +40,10 @@ def rrtStar(nodes, start, iterations, stepSize, mapMaxSize, possibleVelocity, ma
     # Check if the goal is reached
             if newNode and isGoalReached(newNode, goal, threshold):
                 print("Goal reached!")
-                plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
-                getTotalPower(start,newNode,goal)
+                #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
+                print(" l ")
+                print(getTotalPower(start,newNode,goal) * 2, " = E")
+                print(" l ")
                 return nodes
     
       

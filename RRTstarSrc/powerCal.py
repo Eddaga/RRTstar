@@ -1,6 +1,7 @@
 from RRTutils import *
 import math
 from MLP import *
+import numpy as np
 
 
 
@@ -15,13 +16,13 @@ def getOptimalPath(startNode, newNode):
     optimalPath.insert(0,startNode)
     return optimalPath 
 
-def getMlpParams(childNode, parentNode, exNodeDegree):
+def getMlpParams(childNode, parentNode):
     velocity = ((childNode.velocity + parentNode.velocity) / 2)
     accelPress = velocity / getTimeSteer(childNode, parentNode)
 
     # vehicle's tilt is opposite of theta, so add 90 maybe..?
-    childDegree = degrees(atan2( parentNode.y - childNode.y, parentNode.x - childNode.x))
-    parentDegree = degress(atan2( parentNode.parent.y - parentNode.y, parentNode.parent.x - parentNode.x))
+    childDegree = math.degrees(math.atan2( parentNode.y - childNode.y, parentNode.x - childNode.x))
+    parentDegree = math.degrees(math.atan2( parentNode.parent.y - parentNode.y, parentNode.parent.x - parentNode.x))
     tilt = childDegree - parentDegree
     return accelPress, velocity, tilt
 
@@ -34,11 +35,11 @@ def getTotalPower(startNode, newNode, goalNode):
     #current = goalNode
     inputData = []
 
-    while current.parent is not None:
+    while current.parent.parent is not None:
         accelPress, velocity, tilt = getMlpParams(current, current.parent)
         inputData.append([accelPress, velocity, tilt])
         current = current.parent
     
     E = energyCalculator(inputData)
-    print(E)
+    return E
 

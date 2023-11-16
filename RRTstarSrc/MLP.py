@@ -22,7 +22,7 @@ def deviceCheck():
 
 def energyCalculator(inputData):
     
-    modelPath = "../erclAllInOne/data/date/01091158/MLP/MLPmodel/01091158model.pt"
+    modelPath = "/home/esl/kyuyong/erclAllInOne/data/date/01091158/MLP/MLPmodel/01091158model.pt"
     device = deviceCheck()
 
     # Define hyperparameters
@@ -47,7 +47,7 @@ def energyCalculator(inputData):
     inputData = input_scaler.fit_transform(inputData)
 
     # Move data to device
-    train_data = torch.tensor(train_data, dtype=torch.float32).to(device)
+    inputData = torch.tensor(inputData, dtype=torch.float32).to(device)
 
     # Train the model
 
