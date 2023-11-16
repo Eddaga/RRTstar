@@ -1,5 +1,9 @@
 from RRTutils import *
 import math
+from MLP import *
+
+
+
 # import MLP~~
 
 def getOptimalPath(startNode, newNode):
@@ -28,31 +32,13 @@ def getTotalPower(startNode, newNode, goalNode):
     #optimalPath = optimalPath.append(goalNode)
     #goalNode.parent = newNode
     #current = goalNode
+    inputData = []
 
     while current.parent is not None:
         accelPress, velocity, tilt = getMlpParams(current, current.parent)
-        
+        inputData.append([accelPress, velocity, tilt])
         current = current.parent
-        
-
     
-    
+    E = energyCalculator(inputData)
+    print(E)
 
-def mlpParameters(currentNode):
-    optimalPath = getOptimalPath(startNode, )
-    mlpParamVelocity = (currentNode.velocity + currentNode.parent.velocity) / 2
-    # deal accelPress as torqueMode.. so accelPress = accelration
-    # get accel equation accel = Velocity / time!
-    accelPress = ((currentNode.velocity + currentNode.parent.velocity) / 2) / currentNode.cost - currentNode.parent.cost
-    
-    tilt = (currentNode.x - currentNode.parent.y) # kind of this function to get tilts
-
-    return accelPress, velocity, tilt
-
-
-
-'''
-def asklbval(import powermodels(MLP~~~)
-
-    return P~~
-'''
