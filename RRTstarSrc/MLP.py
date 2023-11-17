@@ -59,6 +59,5 @@ def energyCalculator(inputData):
     with torch.no_grad():
         E = model(inputData)
 
-    return E.sum().item()    
-
+    return E.cpu().detach().numpy()
 

@@ -34,16 +34,16 @@ def rrtStar(nodes, start, iterations, stepSize, mapMaxSize, possibleVelocity, ma
             selectNewParentNode(nearestNode, newNode, nearNodes)
             rewireNearNodes(nearNodes, newNode)
             nodes.append(newNode)
-            #print("hello",newNode.x, newNode.y, newNode.velocity)
+            
             
 
     # Check if the goal is reached
             if newNode and isGoalReached(newNode, goal, threshold):
                 print("Goal reached!")
-                #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
-                print(" l ")
-                print(getTotalPower(start,newNode,goal) * 2, " = E")
-                print(" l ")
+                plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
+                
+                print(getTotalPower(start,newNode,goal), " = E")
+                
                 return nodes
     
       

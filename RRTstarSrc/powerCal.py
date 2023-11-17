@@ -22,7 +22,10 @@ def getMlpParams(childNode, parentNode):
 
     # vehicle's tilt is opposite of theta, so add 90 maybe..?
     childDegree = math.degrees(math.atan2( parentNode.y - childNode.y, parentNode.x - childNode.x))
-    parentDegree = math.degrees(math.atan2( parentNode.parent.y - parentNode.y, parentNode.parent.x - parentNode.x))
+    if parentNode.parent is not None:
+        parentDegree = math.degrees(math.atan2( parentNode.parent.y - parentNode.y, parentNode.parent.x - parentNode.x))
+    else:
+        parentDegree = 0
     tilt = childDegree - parentDegree
     return accelPress, velocity, tilt
 
@@ -34,12 +37,37 @@ def getTotalPower(startNode, newNode, goalNode):
     #goalNode.parent = newNode
     #current = goalNode
     inputData = []
+    T = []
+    E = 0
+    totalT = 0
+    j = 0
 
-    while current.parent.parent is not None:
+    while current.parent is not None:
         accelPress, velocity, tilt = getMlpParams(current, current.parent)
         inputData.append([accelPress, velocity, tilt])
+        T.append(getTimeSteer(current,current.parent))        
         current = current.parent
+        j = j+1
     
-    E = energyCalculator(inputData)
+    P = energyCalculator(inputData)
+    P = P.flatten().tolist()
+    print("s")
+    
+    print(len(P))
+    print(j)
+    print("s")
+
+    for i in range(len(P)):
+        print(optimalPath[i].cost)
+        
+        E = E + P[i] * T[i]
+        totalT = totalT + T[i]
+        newNodeT = newNode.cost
+    print(i)
+    print(E)
+    print(totalT)
+    print(newNodeT)
+    
+    exit()
     return E
 
