@@ -111,14 +111,18 @@ def selectNewParentNode(nearestNode, newNode, nearNodes):
             minNode = nearNode
 
     newNode.cost = minCost
+    if newNode.parent:
+        newNode.parent.children.remove(newNode)
     newNode.parent = minNode
     minNode.children.append(newNode)
+    updateChildCost(newNode, newNode.cost)
 
-def update_cost(node, cost):
+def updateChildCost(node, cost):
     # Recursively update the cost of the node and all its descendants
     for child in node.children:
         child.cost = cost + getTimeSteer(node, child)
-        update_cost(child, child.cost)
+        
+        updateChildCost(child, child.cost)
 
 def rewireNearNodes(nearNodes, newNode):
     for nearNode in nearNodes:
@@ -131,7 +135,8 @@ def rewireNearNodes(nearNodes, newNode):
             newNode.children.append(nearNode)  # Add nearNode to the new parent's children list
 
             # Update the cost of nearNode and recursively update the costs of all its descendants
-            update_cost(nearNode, tempCostWithNewNode)
+            nearNode.cost = tempCostWithNewNode
+            updateChildCost(nearNode, tempCostWithNewNode)
 
 '''def rewireNearNodes(nearNodes, newNode):
     for nearNode in nearNodes:

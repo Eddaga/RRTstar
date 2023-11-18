@@ -44,7 +44,7 @@ def main():
     start = Node(1200- 530,925, 1)
     goal = Node(1200- 640,925, 0)
     iterations = 1000
-    stepSize = 2#0.5
+    stepSize = 0.5#0.5
     mapMaxSize = [1200, 1200]
     possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
     threshold = 50 #for isGoalReached(euclidian distance)
