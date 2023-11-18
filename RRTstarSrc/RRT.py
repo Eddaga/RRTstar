@@ -16,7 +16,7 @@ def plot_tree(nodes, newNode, mapData, goal):
     while current.parent is not None:  # Continue until you reach the start node (which has no parent)
         plt.plot([current.x, current.parent.x], [current.y, current.parent.y], 'r-', linewidth=1.0)
         current = current.parent  # Move to the next node up the
-    print(newNode.cost)
+    
     plt.pause(0.01)  # 플롯을 업데이트 하기 위해 잠시 멈춤
 
 
@@ -41,10 +41,11 @@ def rrtStar(nodes, start, iterations, stepSize, mapMaxSize, possibleVelocity, ma
     # Check if the goal is reached
             if newNode and isGoalReached(newNode, goal, threshold):
                 print("Goal reached!")
-                plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
+                #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
                 
-                print(getTotalPower(start,newNode,goal), " = E")
-                
+                print("total E = ", int(getTotalPower(start,newNode,goal)),"W")
+                print("total T = ", int(newNode.cost),"sec")
+                print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
                 return nodes
     
       

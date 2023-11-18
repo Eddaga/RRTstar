@@ -14,9 +14,8 @@ from sklearn.metrics import accuracy_score
 def deviceCheck():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     if device == 'cpu':
+        print("cuda doesn't work!")
         exit()
-    else :
-        print("cuda working\r\n")
 
     return device
 
