@@ -33,6 +33,7 @@ def rrtStar(nodes, start, iterations, stepSize, mapMaxSize, possibleVelocity, ma
             nearNodes = getNearNodes(nodes, newNode, stepSize)
             selectNewParentNode(nearestNode, newNode, nearNodes)
             rewireNearNodes(nearNodes, newNode)
+            
             nodes.append(newNode)
             
             

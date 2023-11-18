@@ -7,6 +7,7 @@ class Node:
         self.velocity = velocity
         self.cost = 0
         self.parent = None
+        self.children = []
 
 def getDistance(node1, node2):
     return np.sqrt((node1.x - node2.x) ** 2 + (node1.y - node2.y) ** 2)

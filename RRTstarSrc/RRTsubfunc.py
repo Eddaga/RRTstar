@@ -109,15 +109,36 @@ def selectNewParentNode(nearestNode, newNode, nearNodes):
         if tempCost < minCost:
             minCost = tempCost
             minNode = nearNode
+
     newNode.cost = minCost
     newNode.parent = minNode
+    minNode.children.append(newNode)
+
+def update_cost(node, cost):
+    # Recursively update the cost of the node and all its descendants
+    for child in node.children:
+        child.cost = cost + getTimeSteer(node, child)
+        update_cost(child, child.cost)
 
 def rewireNearNodes(nearNodes, newNode):
     for nearNode in nearNodes:
         tempCostWithNewNode = newNode.cost + getTimeSteer(newNode, nearNode)
         if tempCostWithNewNode < nearNode.cost:
+            # Update the parent of the nearNode
+            if nearNode.parent:
+                nearNode.parent.children.remove(nearNode)  # Remove nearNode from the old parent's children list
+            nearNode.parent = newNode
+            newNode.children.append(nearNode)  # Add nearNode to the new parent's children list
+
+            # Update the cost of nearNode and recursively update the costs of all its descendants
+            update_cost(nearNode, tempCostWithNewNode)
+
+'''def rewireNearNodes(nearNodes, newNode):
+    for nearNode in nearNodes:
+        tempCostWithNewNode = newNode.cost + getTimeSteer(newNode, nearNode)
+        if tempCostWithNewNode < nearNode.cost:
                 nearNode.cost = tempCostWithNewNode
-                nearNode.parent = newNode
+                nearNode.parent = newNode'''
 
 def isGoalReached(newNode, goal,threshold):
     return getDistance(newNode, goal) < threshold
