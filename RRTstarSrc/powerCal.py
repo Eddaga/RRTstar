@@ -41,7 +41,8 @@ def getTotalPower(startNode, newNode, goalNode):
     E = 0
     totalT = 0
     i = 0
-    for i in range(len(optimalPath) - 1)
+    
+    for i in range(len(optimalPath)-1):
         accelPress, velocity, tilt = getMlpParams(optimalPath[i+1], optimalPath[i])
         inputData.append([accelPress, velocity, tilt])
         T.append(getTimeSteer(optimalPath[i],optimalPath[i+1]))
