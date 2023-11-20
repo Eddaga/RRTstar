@@ -37,7 +37,17 @@ def rrtStar(nodes, start, iterations, stepSize, mapMaxSize, possibleVelocity, ma
             
             nodes.append(newNode)
             hit = hit+1
+
+            if newNode and isGoalReached(newNode, goal, threshold):
+                #print("Goal reached!")
+                plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
+                print("total E = ", int(getTotalPower(start,newNode,goal)),"W")
+                print("total T = ", int(newNode.cost),"sec")
+                print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
+                print("")
+
             if hit == 1000:
+                #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
                 return nodes, hit
             
             

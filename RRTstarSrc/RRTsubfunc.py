@@ -8,9 +8,20 @@ def getRandomNode(mapData, possibleVelocity):
     newNodeCoordinate = random.choice(mapTotalDots)
     randomNode = Node(newNodeCoordinate[0], 
                       newNodeCoordinate[1], 
-                      np.random.randint(1,40))#(0, possibleVelocity)) # Question1. how can i cnofigure possibleVelocity?? 20230807 kyuyong park.
+                      np.random.randint(1, possibleVelocity) #(1,41))#(0, possibleVelocity)) # Question1. how can i cnofigure possibleVelocity?? 20230807 kyuyong park.
     # 150.0 km/h
     return randomNode
+
+def isVelocityPossible(newNode):
+    maxAccel = 3.026 #100km/h/3.6/9.18s = 3.026m/(s^2)
+    newAccel = (newNode.velocity - newNode.parent.velocity) / getTimeSteer(newNode, newNode.parent)
+    if newAccel < maxAccel:
+        
+        return True
+
+    else:
+
+        return False
 
 # this function is consider for all nodes.
 def getNearestNode(nodes, randNode):

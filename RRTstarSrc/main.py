@@ -6,42 +6,9 @@ import select
 import pandas as pd
 
 
-def get_input_with_timeout(prompt, timeout):
-    print(prompt,flush=True)
-    ready, _, _ = select.select([sys.stdin], [], [], timeout)
-    if ready:
-        return sys.stdin.readline().strip()
-    return None
-
-
-def plotMap(mapData):
-
-    # 흑색 픽셀과 백색 픽셀의 위치 목록을 얻습니다.
-    blackList, whiteList = mapData
-    #print(len(blackList))
-    # 흑색 픽셀을 그립니다.
-    xCoords = []
-    yCoords = []
-
-    # Loop through each point in the blackList
-    for point in blackList:
-  
-
-        x = point[0]
-        xCoords.append(x)  
-        
-        y = point[1]
-        yCoords.append(y) 
-
-    # Plot all points at once
-    plt.scatter(xCoords, yCoords, c='black', s=1)  # s is the size of the point
-    plt.pause(0.01)
-    # Show the plot
-    
-
 def main():
-    start = Node(1200- 530,925, 1)
-    goal = Node(1200- 640,925, 0)
+    start = Node(630,880, 1 )
+    goal = Node(550,880, 0)
     iterations = 1000
     stepSize = 1#0.5
     mapMaxSize = [1200, 1200]
@@ -98,7 +65,37 @@ def main():
         print(totalhit)
         
     
-    
+def get_input_with_timeout(prompt, timeout):
+    print(prompt,flush=True)
+    ready, _, _ = select.select([sys.stdin], [], [], timeout)
+    if ready:
+        return sys.stdin.readline().strip()
+    return None
+
+
+def plotMap(mapData):
+
+    # 흑색 픽셀과 백색 픽셀의 위치 목록을 얻습니다.
+    blackList, whiteList = mapData
+    #print(len(blackList))
+    # 흑색 픽셀을 그립니다.
+    xCoords = []
+    yCoords = []
+
+    # Loop through each point in the blackList
+    for point in blackList:
+  
+
+        x = point[0]
+        xCoords.append(x)  
+        
+        y = point[1]
+        yCoords.append(y) 
+
+    # Plot all points at once
+    plt.scatter(xCoords, yCoords, c='black', s=1)  # s is the size of the point
+    plt.pause(0.01)
+    # Show the plot   
 
 
 
