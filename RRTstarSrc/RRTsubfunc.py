@@ -8,20 +8,20 @@ def getRandomNode(mapData, possibleVelocity):
     newNodeCoordinate = random.choice(mapTotalDots)
     randomNode = Node(newNodeCoordinate[0], 
                       newNodeCoordinate[1], 
-                      np.random.randint(1, possibleVelocity) #(1,41))#(0, possibleVelocity)) # Question1. how can i cnofigure possibleVelocity?? 20230807 kyuyong park.
+                      np.random.randint(1, possibleVelocity)) #(1,41))#(0, possibleVelocity)) # Question1. how can i cnofigure possibleVelocity?? 20230807 kyuyong park.
     # 150.0 km/h
     return randomNode
 
-def isVelocityPossible(newNode):
+def getPossibleAccel(newNode):
     maxAccel = 3.026 #100km/h/3.6/9.18s = 3.026m/(s^2)
     newAccel = (newNode.velocity - newNode.parent.velocity) / getTimeSteer(newNode, newNode.parent)
     if newAccel < maxAccel:
         
-        return True
+        return newAccel
 
     else:
 
-        return False
+        return maxAccel
 
 # this function is consider for all nodes.
 def getNearestNode(nodes, randNode):
@@ -38,7 +38,7 @@ def getNewNode(nearestNode, randNode, stepSize, scaler):
         return False
     # get nearestNode From Real Number
     if timeSteer > stepSize:
-        acceleration = (randNode.velocity - nearestNode.velocity) / timeSteer # Accel = (V_1 - V_2)/ time, so calculation is (nearestNodeVelocity - randNodeVelocity) / time, to move from nearsetNode to randNode.
+        acceleration = getPossibleAccel
         deltaVelocity = nearestNode.velocity + acceleration * stepSize # acceleration * domain time = get delta velocity.
         deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * stepSize # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
         distance = getDistance(randNode, nearestNode)
@@ -50,10 +50,15 @@ def getNewNode(nearestNode, randNode, stepSize, scaler):
         newNode = newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize)
         
     else:
-        newNode.x = randNode.x
-        newNode.y = randNode.y
-        newNode.velocity = randNode.velocity
-        #print("<case, ",newNode.x," ",newNode.y," ",newNode.velocity)
+        acceleration = getPossibleAccel
+        deltaVelocity = nearestNode.velocity + acceleration * timeSteer # acceleration * domain time = get delta velocity.
+        deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * timeSteer # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
+        distance = getDistance(randNode, nearestNode)
+        newNode.x += (randNode.x - nearestNode.x) * deltaDistance / distance # dx * ( distance / delta Distance) -> x + delta x
+        newNode.y += (randNode.y - nearestNode.y) * deltaDistance / distance # dy * ( distance / delta Distance) -> y + delta y
+        newNode.velocity = deltaVelocity
+        newNode = newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize)
+
     return newNode
 
 #deal with integrize
