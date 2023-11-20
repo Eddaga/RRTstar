@@ -62,3 +62,24 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
         newNode = min(intNodeInTime, key=lambda node: getTimeSteer(node, newNode))
         
         return newNode
+
+
+def save_to_excel(tree, map_data, filename="output.xlsx"):
+    # Convert tree data to a DataFrame
+    tree_data = [{
+        'x': node.x,
+        'y': node.y,
+        'velocity': node.velocity,
+        'cost': node.cost,
+        'parent_x': node.parent.x if node.parent else None,
+        'parent_y': node.parent.y if node.parent else None
+    } for node in tree]
+    tree_df = pd.DataFrame(tree_data)
+
+    # Convert map data to a DataFrame
+    map_df = pd.DataFrame(map_data, columns=['x', 'y', 'type']) # Assuming map_data is a list of tuples (x, y, type)
+
+    # Create a Pandas Excel writer using XlsxWriter as the engine
+    with pd.ExcelWriter(filename, engine='openpyxl') as writer:
+        tree_df.to_excel(writer, sheet_name='Tree Data')
+        map_df.to_excel(writer, sheet_name='Map Data')

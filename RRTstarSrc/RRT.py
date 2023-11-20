@@ -21,8 +21,9 @@ def plot_tree(nodes, newNode, mapData, goal):
 
 
 def rrtStar(nodes, start, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold):
-    
-    for _ in range(iterations):
+    hit = 0
+    #for _ in range(iterations):
+    while True:
         randNode = getRandomNode(mapData, possibleVelocity)
         
         nearestNode = getNearestNode(nodes, randNode)
@@ -35,23 +36,26 @@ def rrtStar(nodes, start, iterations, stepSize, mapMaxSize, possibleVelocity, ma
             rewireNearNodes(nearNodes, newNode)
             
             nodes.append(newNode)
+            hit = hit+1
+            if hit == 1000:
+                return nodes, hit
             
             
 
     # Check if the goal is reached
-            if newNode and isGoalReached(newNode, goal, threshold):
-                print("Goal reached!")
+            #if newNode and isGoalReached(newNode, goal, threshold):
+                #print("Goal reached!")
                 #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
                 
-                print("total E = ", int(getTotalPower(start,newNode,goal)),"W")
-                print("total T = ", int(newNode.cost),"sec")
-                print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
-                return nodes
+                #print("total E = ", int(getTotalPower(start,newNode,goal)),"W")
+                #print("total T = ", int(newNode.cost),"sec")
+                #print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
+                #return nodes
     
       
 
 
-    return nodes
+    return nodes, hit
 
 
     

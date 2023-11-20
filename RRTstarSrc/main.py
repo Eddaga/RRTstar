@@ -3,6 +3,8 @@ from getMap import *
 from RRT import *
 import sys
 import select
+import pandas as pd
+
 
 def get_input_with_timeout(prompt, timeout):
     print(prompt,flush=True)
@@ -37,14 +39,11 @@ def plotMap(mapData):
     # Show the plot
     
 
-
-
-
 def main():
     start = Node(1200- 530,925, 1)
     goal = Node(1200- 640,925, 0)
     iterations = 1000
-    stepSize = 0.5#0.5
+    stepSize = 1#0.5
     mapMaxSize = [1200, 1200]
     possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
     threshold = 50 #for isGoalReached(euclidian distance)
@@ -65,8 +64,8 @@ def main():
     #plotMap(mapData)
     
     
-
-        
+    hit = 0
+    totalhit = 0        
     print("Load Exist Tree or Make New Tree?")
     while 1:
 
@@ -85,19 +84,21 @@ def main():
         else:
             print("enter correct num please.")
 
-    tree = rrtStar(tree, start, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
-
+    tree, hit = rrtStar(tree, start, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
+    totalhit = totalhit + hit
+    print(totalhit)
     while True:
         #user_input = get_input_with_timeout("1 set iteration end. If you wan to stop, enter something within 1 seconds: ", 0.1)
         #if user_input:
         #    print(f"You entered: {user_input}")
         #    break
         #else:
-        tree = rrtStar(tree, start, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
-    print(len(tree))
-    plt.ioff()  # 모든 것이 끝나면 인터랙티브 플로팅을 끕니다
-
-    plt.show()  # 최종 플롯을 표시합니다
+        tree, hit = rrtStar(tree, start, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
+        totalhit = totalhit + hit
+        print(totalhit)
+        
+    
+    
 
 
 
