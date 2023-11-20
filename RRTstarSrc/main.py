@@ -9,7 +9,6 @@ import pandas as pd
 def main():
     start = Node(880, 630, 1 )
     goal = Node(880,550, 0)
-    iterations = 1000
     stepSize = 2.3#0.5
     mapMaxSize = [1200, 1200]
     possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
@@ -32,7 +31,7 @@ def main():
     
     
     hit = 0
-    totalhit = 0        
+    totalHit = 0        
     print("Load Exist Tree or Make New Tree?")
     while 1:
 
@@ -52,8 +51,10 @@ def main():
             print("enter correct num please.")
 
     tree, hit = rrtStar(tree, start,  stepSize,  possibleVelocity, mapData, scaler, goal, threshold,binaryImage)
-    totalhit = totalhit + hit
-    print(totalhit)
+    totalHit = totalHit + hit
+    save_to_excel(tree,mapData,scaler,totalHit)
+    print(totalHit)
+    i = 1
     while True:
         #user_input = get_input_with_timeout("1 set iteration end. If you wan to stop, enter something within 1 seconds: ", 0.1)
         #if user_input:
@@ -61,8 +62,14 @@ def main():
         #    break
         #else:
         tree, hit = rrtStar(tree, start,  stepSize,  possibleVelocity, mapData, scaler, goal, threshold,binaryImage)
-        totalhit = totalhit + hit
-        print(totalhit)
+        totalHit = totalHit + hit
+        print(totalHit)
+
+        if totalHit == 5000:
+            save_to_excel(tree,mapData,scaler,totalHit)
+        if totalHit == 10000*i:
+            save_to_excel(tree,mapData,scaler,totalHit)
+            i = i+1
         
     
 def get_input_with_timeout(prompt, timeout):

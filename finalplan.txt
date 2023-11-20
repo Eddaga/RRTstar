@@ -15,6 +15,9 @@
  -> 두바퀴 도는걸로 하면 충분할듯
  	36.3kW/h -> 36300*3600 = 130680000W/s
  	1633500W/80s
+
+4. change method of running ( 1st, 2nd~ run) ( different startnode)
+	
  	한바퀴 도는데 80s보다 조금 덜걸리고 배터리는 90만~100만W정도 사용함
  	이러면 오링나니까
  	이걸로 계산해서 
@@ -26,16 +29,9 @@
  	-> 
  	두번째 const에서는 start노드를 동일하게 (피트인을 시작라인에서 한다고 가정) -> 그냥 같은 RRT 결과 주면된다고 생각 (교수님과 이야기)
  	
- 	
 
- 	
- 	
- 
-4. change method of running ( 1st, 2nd~ run) ( different startnode)
-	const 1. 
-	const 2.
-4. tree, map save
-
-5. make figure
+5. tree, map save
+	after do this and go home!
+6. make figure
 
 51490000 

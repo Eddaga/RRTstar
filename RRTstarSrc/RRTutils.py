@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+
 
 class Node:
     def __init__(self, x, y, velocity):
@@ -99,22 +101,34 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
         return newNode'''
 
 
-def save_to_excel(tree, map_data, filename="output.xlsx"):
+def save_to_excel(tree, map_data, scaler, fileNum):
     # Convert tree data to a DataFrame
-    tree_data = [{
-        'x': node.x,
-        'y': node.y,
-        'velocity': node.velocity,
-        'cost': node.cost,
-        'parent_x': node.parent.x if node.parent else None,
-        'parent_y': node.parent.y if node.parent else None
-    } for node in tree]
+    fileName = "/home/esl/kyuyong/RRTstar/result/" + str(fileNum) + "output.xlsx"
+    
+    tree_data = []
+    for index, node in enumerate(tree):
+        children_indices = '; '.join([str(tree.index(child)) for child in node.children])
+        tree_data.append({
+            'id': index,
+            'x': node.x,
+            'y': node.y,
+            'velocity': node.velocity,
+            'cost': node.cost,
+            'parent_id': tree.index(node.parent) if node.parent else None,
+            'children_ids': children_indices
+        })
     tree_df = pd.DataFrame(tree_data)
 
     # Convert map data to a DataFrame
-    map_df = pd.DataFrame(map_data, columns=['x', 'y', 'type']) # Assuming map_data is a list of tuples (x, y, type)
+    blackList, whiteList = map_data
+    map_black_df = pd.DataFrame(blackList, columns=['x', 'y'])
+    map_white_df = pd.DataFrame(whiteList, columns=['x', 'y'])
 
     # Create a Pandas Excel writer using XlsxWriter as the engine
-    with pd.ExcelWriter(filename, engine='openpyxl') as writer:
+    with pd.ExcelWriter(fileName, engine='openpyxl') as writer:
         tree_df.to_excel(writer, sheet_name='Tree Data')
-        map_df.to_excel(writer, sheet_name='Map Data')
+        map_black_df.to_excel(writer, sheet_name='Map Black Data')
+        map_white_df.to_excel(writer, sheet_name='Map White Data')
+        # Save scaler as a separate sheet
+        scaler_df = pd.DataFrame([{'scaler': scaler}])
+        scaler_df.to_excel(writer, sheet_name='Scaler Data')
