@@ -40,12 +40,11 @@ def getTotalPower(startNode, newNode, goalNode):
     T = []
     E = 0
     totalT = 0
-
-    while current.parent is not None:
-        accelPress, velocity, tilt = getMlpParams(current, current.parent)
+    i = 0
+    for i in range(len(optimalPath) - 1)
+        accelPress, velocity, tilt = getMlpParams(optimalPath[i+1], optimalPath[i])
         inputData.append([accelPress, velocity, tilt])
-        T.append(getTimeSteer(current,current.parent))
-        current = current.parent
+        T.append(getTimeSteer(optimalPath[i],optimalPath[i+1]))
 
     
     P = energyCalculator(inputData)
@@ -56,3 +55,32 @@ def getTotalPower(startNode, newNode, goalNode):
         totalT = totalT + T[i]
         
     return E
+
+
+'''def getTotalPower(startNode, newNode, goalNode):
+    optimalPath = getOptimalPath(startNode,newNode)
+    current = newNode
+    #optimalPath = optimalPath.append(goalNode)
+    #goalNode.parent = newNode
+    #current = goalNode
+    inputData = []
+    T = []
+    E = 0
+    totalT = 0
+
+    while current.parent is not None:
+        accelPress, velocity, tilt = getMlpParams(current, current.parent)
+        inputData.append([accelPress, velocity, tilt])
+        T.append(getTimeSteer(current,current.parent))
+        current = current.parent
+
+    
+    P = energyCalculator(inputData)
+    P = P.flatten().tolist()
+    i = 0
+    for i in range(len(P)):
+        E = E + P[i] * T[i]
+        totalT = totalT + T[i]
+        
+    return E
+'''
