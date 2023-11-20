@@ -7,10 +7,10 @@ import pandas as pd
 
 
 def main():
-    start = Node(630,880, 1 )
-    goal = Node(550,880, 0)
+    start = Node(880, 630, 1 )
+    goal = Node(880,550, 0)
     iterations = 1000
-    stepSize = 1#0.5
+    stepSize = 2.3#0.5
     mapMaxSize = [1200, 1200]
     possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
     threshold = 50 #for isGoalReached(euclidian distance)
@@ -21,7 +21,7 @@ def main():
     
 
     print("RRTstar Algorithm Start. Please Load MapData Please")
-    mapData, scaler = getMapData(mapPath,realDistance)
+    binaryImage, mapData, scaler = getMapData(mapPath,realDistance)
      
     
     plt.ion()  # 인터랙티브 플로팅 시작
@@ -51,7 +51,7 @@ def main():
         else:
             print("enter correct num please.")
 
-    tree, hit = rrtStar(tree, start, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
+    tree, hit = rrtStar(tree, start,  stepSize,  possibleVelocity, mapData, scaler, goal, threshold,binaryImage)
     totalhit = totalhit + hit
     print(totalhit)
     while True:
@@ -60,7 +60,7 @@ def main():
         #    print(f"You entered: {user_input}")
         #    break
         #else:
-        tree, hit = rrtStar(tree, start, iterations, stepSize, mapMaxSize, possibleVelocity, mapData, scaler, goal, threshold)
+        tree, hit = rrtStar(tree, start,  stepSize,  possibleVelocity, mapData, scaler, goal, threshold,binaryImage)
         totalhit = totalhit + hit
         print(totalhit)
         
@@ -83,7 +83,7 @@ def plotMap(mapData):
     yCoords = []
 
     # Loop through each point in the blackList
-    for point in blackList:
+    for point in whiteList:
   
 
         x = point[0]

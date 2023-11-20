@@ -1,36 +1,38 @@
 from PIL import Image
-import numpy as np
 
-    
-def getMapData(path,realDistance):
-    # 1. load image
+def getMapData(path, realDistance):
+    # 1. 이미지 로드
     original_image = Image.open(path)
     
-    # 2. change image to binary scale
-    threshold = 100  # 
-    binary_image = original_image.convert('L').point(lambda p: p < threshold and 1)
+    # 2. 이진 스케일로 이미지 변환
+    threshold = 1
+    binaryImage = original_image.convert('L').point(lambda p: p < threshold and 1)
 
-    # 2. create image scaler // total Image Pixel / Real distance(m) -> x pixel/m => x pixel per 1m.
+    # 이미지 크기 반환
+    width, height = binaryImage.size
 
-    binaryNP = np.array(binary_image)
-    rows, cols = binaryNP.shape    # it returns total size of image.
-
-    imagePixel = rows
-    #realDistance = 1200 # it means 1200m
-    domain = 10 # grid scalse as 10m.
+    imagePixel = height
+    domain = 10  # 그리드 스케일 10m 단위
     scaler = imagePixel / realDistance * domain
 
-    # 3. make black list 
+    # 3. 흑백 리스트 생성
     blackList = []
     whiteList = []
     
-    for i in range(0, imagePixel, int(scaler)):
-        for j in range(0 , imagePixel, int(scaler)):
-            if binaryNP[i, j] == 0:  # 검은 픽셀 - 트랙
-                #print(i,j)
+    # blackList 생성 (10단위 증가)
+    for i in range(0, width, int(scaler)):
+        for j in range(0, height, int(scaler)):
+            pixel_value = binaryImage.getpixel((i, j))
+            if pixel_value == 1:  # 검은 픽셀 - 트랙
                 blackList.append((i, j))
-            else:  # 흰 픽셀 - 장애물
+
+    # whiteList 생성 (모든 픽셀 검사)
+    for i in range(0, width, int(scaler)):
+        for j in range(0, height, int(scaler)):
+            pixel_value = binaryImage.getpixel((i, j))
+            if pixel_value != 1:  # 흰 픽셀 - 장애물
                 whiteList.append((i, j))
+
     mapData = [blackList, whiteList]
     
-    return mapData, scaler
+    return binaryImage, mapData, scaler

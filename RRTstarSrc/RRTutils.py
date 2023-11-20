@@ -17,7 +17,41 @@ def getTimeSteer(node1, node2):
         return float('inf')
     return getDistance(node1, node2) / ( (node1.velocity + node2.velocity) / 2 )
 
+def calculateDistanceAndVelocity(x, y, nearestNode, acceleration):
+    distance = np.sqrt((nearestNode.x - x) ** 2 + (nearestNode.y - y) ** 2)
+    if np.isnan(distance) or distance < 0:
+        return None, None
+
+    velocity_squared = nearestNode.velocity**2 + 2 * acceleration * distance
+    if velocity_squared < 0:
+        return None, None
+
+    velocity = int(round(np.sqrt(velocity_squared)))
+    return distance, velocity
+
 def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
+    coordinates = [
+        (int(np.floor(newNode.x / scaler) * scaler), int(np.floor(newNode.y / scaler) * scaler)),
+        (int(np.ceil(newNode.x / scaler) * scaler), int(np.floor(newNode.y / scaler) * scaler)),
+        (int(np.floor(newNode.x / scaler) * scaler), int(np.ceil(newNode.y / scaler) * scaler)),
+        (int(np.ceil(newNode.x / scaler) * scaler), int(np.ceil(newNode.y / scaler) * scaler))
+    ]
+
+    intNodes = []
+    for x, y in coordinates:
+        distance, velocity = calculateDistanceAndVelocity(x, y, nearestNode, acceleration)
+        if distance is not None and velocity is not None:
+            intNodes.append(Node(x, y, velocity))
+
+    intNodeInTime = [node for node in intNodes if getTimeSteer(node, nearestNode) < stepSize]
+
+    if not intNodeInTime:
+        return False
+    else:
+        newNode = min(intNodeInTime, key=lambda node: getTimeSteer(node, newNode))
+        return newNode
+
+'''def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
     
     ddX = int(np.floor(newNode.x / scaler) * scaler)
     ddY = int(np.floor(newNode.y / scaler) * scaler)
@@ -32,7 +66,8 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
     uuY = int(np.ceil(newNode.y / scaler) * scaler)
     
     # V^2 = (V_0)^2 + 2as //
-    ddDistance = np.sqrt((nearestNode.x - ddX) ** 2 + (nearestNode.y - ddY) ** 2) 
+    ddDistance = np.sqrt((nearestNode.x - ddX) ** 2 + (nearestNode.y - ddY) ** 2)
+    
     ddv = int(round(np.sqrt(pow(nearestNode.velocity,2) + (2*acceleration * ddDistance))))
     dd = Node(ddX,ddY,ddv)       
             
@@ -61,7 +96,7 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
 
         newNode = min(intNodeInTime, key=lambda node: getTimeSteer(node, newNode))
         
-        return newNode
+        return newNode'''
 
 
 def save_to_excel(tree, map_data, filename="output.xlsx"):
