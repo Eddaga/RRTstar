@@ -1,0 +1,41 @@
+1. startnode Change
+
+2. get maxAccel and change randomVelocity
+45912 48052 2140
+      46830 918
+70002 72212 2210
+      71048
+2140초
+2140*10ms
+21400ms
+21.4s
+
+
+3. get energy for total.
+ -> 두바퀴 도는걸로 하면 충분할듯
+ 	36.3kW/h -> 36300*3600 = 130680000W/s
+ 	1633500W/80s
+ 	한바퀴 도는데 80s보다 조금 덜걸리고 배터리는 90만~100만W정도 사용함
+ 	이러면 오링나니까
+ 	이걸로 계산해서 
+ 	1. const에서는 optimalPath에서 속도 감소시키는식으로하고
+ 	2. const에서는 풀속도 박고 피트인때리는걸로
+ 	
+ 	대신에 이제 
+ 	첫번째 const에서는 start노드를 두번째 바퀴에서는 이전 goal노드의 속도로 하면될듯
+ 	-> 
+ 	두번째 const에서는 start노드를 동일하게 (피트인을 시작라인에서 한다고 가정) -> 그냥 같은 RRT 결과 주면된다고 생각 (교수님과 이야기)
+ 	
+ 	
+
+ 	
+ 	
+ 
+4. change method of running ( 1st, 2nd~ run) ( different startnode)
+	const 1. 
+	const 2.
+4. tree, map save
+
+5. make figure
+
+51490000 
