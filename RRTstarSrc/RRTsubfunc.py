@@ -142,12 +142,26 @@ def getNearNodes(nodes, newNode, stepSize,mapPath, distance_threshold=0):
         if getTimeSteer(node, newNode) < stepSize:
             # 두 노드 사이의 유클리드 거리 계산
             euclidean_distance = getDistance(node, newNode)
-            if euclidean_distance > distance_threshold and not isNodeSteerOnObstacle(node, newNode,mapPath):
+            if euclidean_distance > distance_threshold and (not isNodeSteerOnObstacle(node, newNode,mapPath)) and isNodeAccelOk(node, newNode):
                 
                 nearNodes.append(node)
     return nearNodes
 # add code which consider radius node.(after add grid options..?)
 
+def isNodeAccelOk(primaryNode, followNode):
+    maxAccel = 3.026
+    newAccel = (followNode.velocity - primaryNode.velocity) / getTimeSteer(followNode, primaryNode)
+
+    
+    if (0 - maxAccel) < newAccel < maxAccel:
+        
+        return True
+    else:
+        
+        return False
+
+
+    
 #deal with integrize
 def selectNewParentNode(nearestNode, newNode, nearNodes):
     minCost = nearestNode.cost + getTimeSteer(nearestNode, newNode)
