@@ -9,12 +9,12 @@ import pandas as pd
 def main():
     start = Node(880, 630, 1 )
     goal = Node(880,550, 0)
-    stepSize = 2.3#0.5
+    stepSize = 3#0.5
     mapMaxSize = [1200, 1200]
     possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
     threshold = 50 #for isGoalReached(euclidian distance)
     mapPath = "../mapImage/9track2.png"
-    realDistance = 1200
+    realDistance = 12000
     # tree = treeLoader()
 
     
@@ -64,7 +64,8 @@ def main():
         tree, hit = rrtStar(tree, start,  stepSize,  possibleVelocity, mapData, scaler, goal, threshold,binaryImage)
         totalHit = totalHit + hit
         print(totalHit)
-
+        if totalHit == 100:
+            save_to_excel(tree,mapData,scaler,totalHit)
         if totalHit == 5000:
             save_to_excel(tree,mapData,scaler,totalHit)
         if totalHit == 10000*i:

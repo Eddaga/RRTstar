@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+from bresenham import bresenham
 
 class Node:
     def __init__(self, x, y, velocity):
@@ -53,57 +53,138 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
         newNode = min(intNodeInTime, key=lambda node: getTimeSteer(node, newNode))
         return newNode
 
-'''def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
-    
-    ddX = int(np.floor(newNode.x / scaler) * scaler)
-    ddY = int(np.floor(newNode.y / scaler) * scaler)
+def getPossibleVelocityWithAngle(child, parent, degree):
+    tempNode = Node(child.x, child.y, child.velocity)
+    if degree >= 120 and degree <= 180:
+        # degree가 120도에서 180도 사이인 경우
+        # 비율을 계산해서 반환 (120도는 10%, 180도는 100%)
+        ratio = (degree - 120) / 60  # 120도는 10%, 180도는 100%
+        tempNode.velocity = parent.velocity * (0.10 + ratio * 0.90)
 
-    udX = int(np.ceil(newNode.x / scaler) * scaler)
-    udY = int(np.floor(newNode.y / scaler) * scaler)
-
-    duX = int(np.floor(newNode.x / scaler) * scaler)
-    duY = int(np.ceil(newNode.y / scaler) * scaler)
-
-    uuX = int(np.ceil(newNode.x / scaler) * scaler)
-    uuY = int(np.ceil(newNode.y / scaler) * scaler)
-    
-    # V^2 = (V_0)^2 + 2as //
-    ddDistance = np.sqrt((nearestNode.x - ddX) ** 2 + (nearestNode.y - ddY) ** 2)
-    
-    ddv = int(round(np.sqrt(pow(nearestNode.velocity,2) + (2*acceleration * ddDistance))))
-    dd = Node(ddX,ddY,ddv)       
-            
-    udDistance = np.sqrt((nearestNode.x - udX) ** 2 + (nearestNode.y - udY) ** 2)
-    udv = int(round(np.sqrt(pow(nearestNode.velocity,2) + (2*acceleration * udDistance))))
-    ud = Node(udX,udY,udv)
-    
-    duDistance = np.sqrt((nearestNode.x - duX) ** 2 + (nearestNode.y - duY) ** 2)
-    duv = int(round(np.sqrt(pow(nearestNode.velocity,2) + (2*acceleration * duDistance))))
-    du = Node(duX,duY,duv)
-    
-    uuDistance = np.sqrt((nearestNode.x - uuX) ** 2 + (nearestNode.y - uuY) ** 2)
-    uuv = int(round(np.sqrt(pow(nearestNode.velocity,2) + (2*acceleration * uuDistance))))
-    uu = Node(uuX,uuY,uuv)
-    
-    # 4점 중 inside인 점 찾기
-    intNodes = [dd, ud, du, uu]
-    intNodeInTime = [intNode for intNode in intNodes if getTimeSteer(intNode, nearestNode) < stepSize ]
-    
-    # 만약에 없으면, newNode 없음! return False!
-    if not intNodeInTime:
-        return False
-    
-    # inside 인 점 중에서 newNode랑 가장 가까운 점 -> newNode
+        return tempNode
     else:
+        print("fuck case occured!")
+        # 그 외의 경우에는 None 또는 다른 예외 처리를 수행
+        return None  # 또는 예외를 발생시킴
 
-        newNode = min(intNodeInTime, key=lambda node: getTimeSteer(node, newNode))
+def getPossibleAccel(newNode,nearestNode,degree):
+
+
+    maxAccel = 3.026 #100km/h/3.6/9.18s = 3.026m/(s^2)
+    newAccel = (newNode.velocity - nearestNode.velocity) / getTimeSteer(newNode, nearestNode)
+    accelToUse = newAccel
+
+    if nearestNode.parent is not None:
+        tempNodeForWithAngle = getPossibleVelocityWithAngle(newNode, nearestNode, degree)
+        newAccelWithPossibleVelocity = (tempNodeForWithAngle.velocity - nearestNode.velocity) / getTimeSteer(tempNodeForWithAngle, nearestNode)
+        accelToUse = max(newAccelWithPossibleVelocity,newAccel)
+
+    if accelToUse < maxAccel:
         
-        return newNode'''
+        return accelToUse
+        
+    else:
+        
+        return maxAccel
+
+def isNodeAccelOk(primaryNode, followNode):
+    maxAccel = 3.026
+    newAccel = (followNode.velocity - primaryNode.velocity) / getTimeSteer(followNode, primaryNode)
+
+    
+    if (0 - maxAccel) < newAccel < maxAccel:
+        
+        return True
+    else:
+        
+        return False
+
+
+def calculateSignedAngle(p1, p2, p3):
+    """
+    Calculate the signed angle at p2 formed by the line segments p1-p2 and p2-p3.
+    
+    Args:
+    p1, p2, p3 (tuples/lists): Coordinates of the three points (x, y).
+
+    Returns:
+    float: Signed angle at p2 in degrees. Positive if the angle is counterclockwise,
+           negative if clockwise.
+    """
+    # Convert points to numpy arrays for vector operations
+    p1 = np.array(p1)
+    p2 = np.array(p2)
+    p3 = np.array(p3)
+
+    # Calculate vectors
+    v1 = p1 - p2
+    v2 = p3 - p2
+
+    # Calculate the angle using the dot product and arccosine function
+    angle_radians = np.arccos(np.clip(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)), -1.0, 1.0))
+
+    # Calculate the cross product to determine the direction of the angle
+    cross_product = np.cross(v1, v2)
+
+    # Convert to degrees and apply sign based on the direction
+    if cross_product > 0:
+        # Counterclockwise direction
+        angle_degrees = np.degrees(angle_radians)
+    else:
+        # Clockwise direction
+        angle_degrees = -np.degrees(angle_radians)
+
+    return angle_degrees
+    
+import numpy as np
+
+def calculateAngle(p1, p2, p3):
+    """
+    Calculate the angle at p2 formed by the line segments p1-p2 and p2-p3.
+    
+    Args:
+    p1, p2, p3 (tuples/lists): Coordinates of the three points (x, y).
+
+    Returns:
+    float: Angle at p2 in degrees.
+    """
+    # Convert points to numpy arrays for vector operations
+    p1 = np.array(p1)
+    p2 = np.array(p2)
+    p3 = np.array(p3)
+
+    # Calculate vectors
+    v1 = p1 - p2
+    v2 = p3 - p2
+
+    # Calculate the angle using the dot product and arccosine function
+    angle_radians = np.arccos(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)))
+
+    # Convert to degrees
+    angle_degrees = np.degrees(angle_radians)
+
+    return angle_degrees
+
+
+def createLinePixels(x0, y0, x1, y1):
+    """ Create a binary array representing the line between two points. """
+    points = list(bresenham(x0, y0, x1, y1))
+    
+    
+    return points
+
+def updateChildCost(node, cost):
+    # Recursively update the cost of the node and all its descendants
+    for child in node.children:
+        child.cost = cost + getTimeSteer(node, child)
+        
+        updateChildCost(child, child.cost)
+
 
 
 def save_to_excel(tree, map_data, scaler, fileNum):
     # Convert tree data to a DataFrame
-    fileName = "/home/esl/kyuyong/RRTstar/result/" + str(fileNum) + "output.xlsx"
+    fileName = "/home/esl/kyuyong/RRTstar/result3/" + str(fileNum) + "output.xlsx"
     
     tree_data = []
     for index, node in enumerate(tree):

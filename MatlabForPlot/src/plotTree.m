@@ -33,10 +33,69 @@ function plotTree(node)
     % end
 
     % Plot the tree
-    preOrderTraversal(node);
+    
+    %preOrderTraversal(node);
+
+    % Collect line information
+    lines = collectLines(node);
+
+    % Plot all lines and nodes
+    plotLinesAndNodes(lines);
 
     
 end
+
+function lines = collectLines(node)
+    lines = [];
+
+    if isempty(node.children)
+        return;
+    end
+
+    for i = 1:length(node.children)
+        childNode = node.children{i};
+        lines = [lines; [node.x, childNode.x, node.y, childNode.y]];
+        lines = [lines; collectLines(childNode)]; % 하위 서브트리의 라인 정보 수집
+    end
+end
+
+function plotLinesAndNodes(lines)
+    numLines = size(lines, 1);
+
+    % Plot all lines
+    for i = 1:numLines
+        lineInfo = lines(i, :);
+        x1 = lineInfo(1);
+        x2 = lineInfo(2);
+        y1 = lineInfo(3);
+        y2 = lineInfo(4);
+        plot([x1, x2], [y1, y2], 'k', 'LineWidth', 0.1);
+    end
+
+    % Plot all nodes
+    %scatter(lines(:, 2), lines(:, 4), 4, 'b', 'filled');
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function preOrderTraversal(node)
     plotNode(node);

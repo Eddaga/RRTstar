@@ -8,11 +8,15 @@ from importAndExport import *
 
 def main():
     # 1. get power and make power consume less
-        # 1. Load Optimal Path
-    CurrentOptimalPath = loadPath(1000)
+        # 1.1 Load Optimal Path
+    optimalPath = loadPath(5000)
+        # 2. check Power
+    E = getTotalPower(optimalPath)
+    print(E, optimalPath[len(optimalPath) -1 ].cost)
+    #130680000W/s
+    print(130680000 / optimalPath[len(optimalPath) -1 ].cost)
 
-
-            
+    exit()            
         # 2. make less power and make tree as possible.
     # 2. 
     start = Node(880, 630, 1 )

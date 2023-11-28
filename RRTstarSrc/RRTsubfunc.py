@@ -1,7 +1,7 @@
 from RRTutils import *
 import random
 from PIL import Image
-from bresenham import bresenham
+
 
 #deal with integrize
 def getRandomNode(mapData, possibleVelocity):
@@ -14,24 +14,26 @@ def getRandomNode(mapData, possibleVelocity):
     
     return randomNode
 
-def getPossibleAccel(newNode,nearestNode):
-    maxAccel = 3.026 #100km/h/3.6/9.18s = 3.026m/(s^2)
-    
-    newAccel = (newNode.velocity - nearestNode.velocity) / getTimeSteer(newNode, nearestNode)
-    
-    if newAccel < maxAccel:
-        
-        return newAccel
-        
-    else:
-        
-        return maxAccel
-
 # this function is consider for all nodes.
 def getNearestNode(nodes, randNode):
     nearestNode = min((node for node in nodes if getTimeSteer(node, randNode) > 0), 
                       key=lambda node: getTimeSteer(node, randNode), default=None)
     return nearestNode
+
+
+
+'''def getNearestNode(nodes, randNode, condition_function=None):
+    nearestNode = None
+    minTimeSteer = float('inf')
+
+    for node in nodes:
+        if condition_function is None or (node.parent is not None and calculateAngle(node,randNode) < 120):
+            timeSteer = getTimeSteer(node, randNode)
+            if timeSteer > 0 and timeSteer < minTimeSteer:
+                nearestNode = node
+                minTimeSteer = timeSteer
+
+    return nearestNode'''
 
 #deal with integrize
 def getNewNode(nearestNode, randNode, stepSize, scaler):
@@ -40,9 +42,13 @@ def getNewNode(nearestNode, randNode, stepSize, scaler):
     
     if timeSteer == float('inf'):
         return False
+    if nearestNode.parent is not None:
+        degree = calculateAngle((nearestNode.parent.x, nearestNode.parent.y), (nearestNode.x, nearestNode.y), (randNode.x, randNode.y))
+        if degree < 120:
+            return False
     # get nearestNode From Real Number
     if timeSteer > stepSize:
-        acceleration = getPossibleAccel(randNode,nearestNode)
+        acceleration = getPossibleAccel(randNode,nearestNode, degree)
         deltaVelocity = nearestNode.velocity + acceleration * stepSize # acceleration * domain time = get delta velocity.
         deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * stepSize # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
         distance = getDistance(randNode, nearestNode)
@@ -54,7 +60,7 @@ def getNewNode(nearestNode, randNode, stepSize, scaler):
         
         
     else:
-        acceleration = getPossibleAccel(randNode,nearestNode)
+        acceleration = getPossibleAccel(randNode,nearestNode, degree)
         deltaVelocity = nearestNode.velocity + acceleration * timeSteer # acceleration * domain time = get delta velocity.
         deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * timeSteer # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
         distance = getDistance(randNode, nearestNode)
@@ -65,24 +71,32 @@ def getNewNode(nearestNode, randNode, stepSize, scaler):
         #print(acceleration)
     return newNode
 
+def isNearNodesToNewNodePossible(child, parent):
+    grandparent = parent.parent
+    if grandparent == None:
+        
+        return True
+
+    elif calculateAngle((grandparent.x,grandparent.y),(parent.x, parent.y),(child.x, child.y)) < 120:
+        
+        return False
+    else:
+        
+        return True
+
 #deal with integrize
 def isNodeOnObstacle(newNode, MapData):
     if (newNode.x, newNode.y) in MapData[0]:
         
         return False
     else:
-        #print(newNode.x,newNode.y,"out")
+
         return True
 
 #deal with integrize
 
 
-def createLinePixels(x0, y0, x1, y1):
-    """ Create a binary array representing the line between two points. """
-    points = list(bresenham(x0, y0, x1, y1))
-    
-    
-    return points
+
 
 def isNodeSteerOnObstacle(node1, node2, binaryImage):
     """ Check if the path between two nodes crosses an obstacle using AND operation. """
@@ -98,28 +112,6 @@ def isNodeSteerOnObstacle(node1, node2, binaryImage):
             return True
     
     return False
-
-
-
-
-'''def isNodeSteerOnObstacle(node1, node2, MapData, scaler):
-    x1, y1 = node1.x, node1.y
-    x2, y2 = node2.x, node2.y
-    distance = getDistance(node1, node2)
-    
-    num_steps = int(distance / scaler)
-    
-    for i in range(num_steps + 1):
-        x = x1 + i * scaler * (x2 - x1) / distance
-        y = y1 + i * scaler * (y2 - y1) / distance
-        
-        x, y = round(x), round(y)
-        
-        if (x, y) in MapData[0]:  # MapData[1] is white
-            return True
-    
-    return False'''
-
 
 #deal with integrize
 def isNewNodeObstacleFree(newNode, nearestNode, mapData, binaryImage):
@@ -142,24 +134,12 @@ def getNearNodes(nodes, newNode, stepSize,mapPath, distance_threshold=0):
         if getTimeSteer(node, newNode) < stepSize:
             # 두 노드 사이의 유클리드 거리 계산
             euclidean_distance = getDistance(node, newNode)
-            if euclidean_distance > distance_threshold and (not isNodeSteerOnObstacle(node, newNode,mapPath)) and isNodeAccelOk(node, newNode):
+            if euclidean_distance > distance_threshold and (not isNodeSteerOnObstacle(node, newNode,mapPath)) \
+                and isNodeAccelOk(node, newNode) and isNearNodesToNewNodePossible(newNode, node):
                 
                 nearNodes.append(node)
     return nearNodes
 # add code which consider radius node.(after add grid options..?)
-
-def isNodeAccelOk(primaryNode, followNode):
-    maxAccel = 3.026
-    newAccel = (followNode.velocity - primaryNode.velocity) / getTimeSteer(followNode, primaryNode)
-
-    
-    if (0 - maxAccel) < newAccel < maxAccel:
-        
-        return True
-    else:
-        
-        return False
-
 
     
 #deal with integrize
@@ -180,13 +160,6 @@ def selectNewParentNode(nearestNode, newNode, nearNodes):
     minNode.children.append(newNode)
     updateChildCost(newNode, newNode.cost)
 
-def updateChildCost(node, cost):
-    # Recursively update the cost of the node and all its descendants
-    for child in node.children:
-        child.cost = cost + getTimeSteer(node, child)
-        
-        updateChildCost(child, child.cost)
-
 def rewireNearNodes(nearNodes, newNode):
     for nearNode in nearNodes:
         tempCostWithNewNode = newNode.cost + getTimeSteer(newNode, nearNode)
@@ -200,13 +173,6 @@ def rewireNearNodes(nearNodes, newNode):
             # Update the cost of nearNode and recursively update the costs of all its descendants
             nearNode.cost = tempCostWithNewNode
             updateChildCost(nearNode, tempCostWithNewNode)
-
-'''def rewireNearNodes(nearNodes, newNode):
-    for nearNode in nearNodes:
-        tempCostWithNewNode = newNode.cost + getTimeSteer(newNode, nearNode)
-        if tempCostWithNewNode < nearNode.cost:
-                nearNode.cost = tempCostWithNewNode
-                nearNode.parent = newNode'''
 
 def isGoalReached(newNode, goal,threshold):
     return getDistance(newNode, goal) < threshold

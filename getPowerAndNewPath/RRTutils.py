@@ -3,11 +3,11 @@ import pandas as pd
 
 
 class Node:
-    def __init__(self, x, y, velocity):
+    def __init__(self, x, y, velocity, cost):
         self.x = x
         self.y = y
         self.velocity = velocity
-        self.cost = 0
+        self.cost = cost
         self.parent = None
         self.children = []
 
