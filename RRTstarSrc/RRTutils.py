@@ -53,13 +53,13 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
         newNode = min(intNodeInTime, key=lambda node: getTimeSteer(node, newNode))
         return newNode
 
-def getPossibleVelocityWithAngle(child, parent, degree):
+def getPossibleMaxVelocityWithAngle(child, degree):
     tempNode = Node(child.x, child.y, child.velocity)
     if degree >= 120 and degree <= 180:
         # degree가 120도에서 180도 사이인 경우
         # 비율을 계산해서 반환 (120도는 10%, 180도는 100%)
         ratio = (degree - 120) / 60  # 120도는 10%, 180도는 100%
-        tempNode.velocity = parent.velocity * (0.10 + ratio * 0.90)
+        tempNode.velocity = 3 + ratio * 38
 
         return tempNode
     else:
@@ -75,7 +75,7 @@ def getPossibleAccel(newNode,nearestNode,degree):
     accelToUse = newAccel
 
     if nearestNode.parent is not None:
-        tempNodeForWithAngle = getPossibleVelocityWithAngle(newNode, nearestNode, degree)
+        tempNodeForWithAngle = getPossibleMaxVelocityWithAngle(newNode, degree)
         newAccelWithPossibleVelocity = (tempNodeForWithAngle.velocity - nearestNode.velocity) / getTimeSteer(tempNodeForWithAngle, nearestNode)
         accelToUse = max(newAccelWithPossibleVelocity,newAccel)
 
@@ -165,6 +165,20 @@ def calculateAngle(p1, p2, p3):
 
     return angle_degrees
 
+def fitNewNodeVelocity (nearNode, newNode):
+    
+    degree = calculateSignedAngle((nearNode.parent.x,nearNode.parent.y),(nearNode.x,nearNode.y),(newNode.x,newNode.y))
+    tempNode = getPossibleMaxVelocityWithAngle(newNode,degree)
+    if newNode.velcoity < tempNode.velocity:
+        tempNode = newNode
+    return tempNode
+
+def isNearNodeVelocityPossible (nearNode,degree):
+    tempNode = getPossibleMaxVelocityWithAngle(nearNode,degree)
+    if tempNode.velocity >= nearNode:
+        return True
+    else:
+        return False
 
 def createLinePixels(x0, y0, x1, y1):
     """ Create a binary array representing the line between two points. """

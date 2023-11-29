@@ -43,25 +43,28 @@ def rrtStar(nodes, start, stepSize, possibleVelocity, mapData, scaler, goal, thr
         
         # Check if newNode is valid and obstacle-free
         if newNode and isNewNodeObstacleFree(newNode, nearestNode, mapData,  binaryImage):
-            nearNodes = getNearNodes(nodes, newNode, stepSize,binaryImage)
-            selectNewParentNode(nearestNode, newNode, nearNodes)
-            rewireNearNodes(nearNodes, newNode)
-            
-            nodes.append(newNode)
-            hit = hit+1
-            #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
-                #if newNode and isGoalReached(newNode, goal, threshold):
-                #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
-                #print("total E = ", int(getTotalPower(start,newNode,goal)),"W")
-                #print("total T = ", int(newNode.cost),"sec")
-                #print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
 
-            if hit == 1000:
+            nearNodes = getNearNodes(nodes, newNode, stepSize,binaryImage)
+            if not nearNodes:
+                selectNewParentNode(nearestNode, newNode, nearNodes)
+                rewireNearNodes(nearNodes, newNode)
+                
+                nodes.append(newNode)
+                hit = hit+1
                 #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
-                #print("total E = ", int(getTotalPower(start,newNode,goal)),"W")
-                #print("total T = ", int(newNode.cost),"sec")
-                #print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
-                return nodes, hit
+                    #if newNode and isGoalReached(newNode, goal, threshold):
+                    #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
+                    #print("total E = ", int(getTotalPower(start,newNode,goal)),"W")
+                    #print("total T = ", int(newNode.cost),"sec")
+                    #print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
+                print(hit)
+
+                if hit == 1000:
+                    #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
+                    #print("total E = ", int(getTotalPower(start,newNode,goal)),"W")
+                    #print("total T = ", int(newNode.cost),"sec")
+                    #print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
+                    return nodes, hit
             
             
 
