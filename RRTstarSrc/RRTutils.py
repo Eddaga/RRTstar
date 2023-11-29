@@ -55,6 +55,7 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
 
 def getPossibleMaxVelocityWithAngle(child, degree):
     tempNode = Node(child.x, child.y, child.velocity)
+    
     if degree >= 120 and degree <= 180:
         # degree가 120도에서 180도 사이인 경우
         # 비율을 계산해서 반환 (120도는 10%, 180도는 100%)
@@ -64,6 +65,8 @@ def getPossibleMaxVelocityWithAngle(child, degree):
         return tempNode
     else:
         print("fuck case occured!")
+        print(child.x, child.y, child.velocity)
+        print(degree)
         # 그 외의 경우에는 None 또는 다른 예외 처리를 수행
         return None  # 또는 예외를 발생시킴
 

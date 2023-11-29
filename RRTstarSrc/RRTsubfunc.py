@@ -22,12 +22,12 @@ def getNearestNode(nodes, randNode):
 
 
 
-'''def getNearestNode(nodes, randNode, condition_function=None):
+'''def getNearestNode(nodes, randNode):
     nearestNode = None
     minTimeSteer = float('inf')
 
     for node in nodes:
-        if condition_function is None or (node.parent is not None and calculateAngle(node,randNode) < 120):
+        if node.parent is None or (node.parent is not None and calculateAngle((node.parent.x,node.parent.y),(node.x,node.y),(randNode.x,randNode.y)) > 120):
             timeSteer = getTimeSteer(node, randNode)
             if timeSteer > 0 and timeSteer < minTimeSteer:
                 nearestNode = node
@@ -44,37 +44,39 @@ def getNewNode(nearestNode, randNode, stepSize, scaler):
         return False
     if nearestNode.parent is not None:
         degree = calculateAngle((nearestNode.parent.x, nearestNode.parent.y), (nearestNode.x, nearestNode.y), (randNode.x, randNode.y))
-        if degree < 120:
-            return False
+    
     # get nearestNode From Real Number
-    if timeSteer > stepSize:
-        acceleration = getPossibleAccel(randNode,nearestNode, degree)
-        deltaVelocity = nearestNode.velocity + acceleration * stepSize # acceleration * domain time = get delta velocity.
-        deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * stepSize # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
-        distance = getDistance(randNode, nearestNode)
-        newNode.x += (randNode.x - nearestNode.x) * deltaDistance / distance # dx * ( distance / delta Distance) -> x + delta x
-        newNode.y += (randNode.y - nearestNode.y) * deltaDistance / distance # dy * ( distance / delta Distance) -> y + delta y
-        newNode.velocity = deltaVelocity
-        #print(acceleration)
-        newNode = newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize)
+    if nearestNode.parent is None or degree >= 120:
         
-        
-    else:
-        acceleration = getPossibleAccel(randNode,nearestNode, degree)
-        deltaVelocity = nearestNode.velocity + acceleration * timeSteer # acceleration * domain time = get delta velocity.
-        deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * timeSteer # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
-        distance = getDistance(randNode, nearestNode)
-        newNode.x += (randNode.x - nearestNode.x) * deltaDistance / distance # dx * ( distance / delta Distance) -> x + delta x
-        newNode.y += (randNode.y - nearestNode.y) * deltaDistance / distance # dy * ( distance / delta Distance) -> y + delta y
-        newNode.velocity = deltaVelocity
-        newNode = newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize)
-        #print(acceleration)
-    return newNode
+        if timeSteer > stepSize:
+            acceleration = getPossibleAccel(randNode,nearestNode, degree)
+            deltaVelocity = nearestNode.velocity + acceleration * stepSize # acceleration * domain time = get delta velocity.
+            deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * stepSize # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
+            distance = getDistance(randNode, nearestNode)
+            newNode.x += (randNode.x - nearestNode.x) * deltaDistance / distance # dx * ( distance / delta Distance) -> x + delta x
+            newNode.y += (randNode.y - nearestNode.y) * deltaDistance / distance # dy * ( distance / delta Distance) -> y + delta y
+            newNode.velocity = deltaVelocity
+            #print(acceleration)
+            newNode = newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize)
+            
+            
+        else:
+            acceleration = getPossibleAccel(randNode,nearestNode, degree)
+            deltaVelocity = nearestNode.velocity + acceleration * timeSteer # acceleration * domain time = get delta velocity.
+            deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * timeSteer # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
+            distance = getDistance(randNode, nearestNode)
+            newNode.x += (randNode.x - nearestNode.x) * deltaDistance / distance # dx * ( distance / delta Distance) -> x + delta x
+            newNode.y += (randNode.y - nearestNode.y) * deltaDistance / distance # dy * ( distance / delta Distance) -> y + delta y
+            newNode.velocity = deltaVelocity
+            newNode = newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize)
+            #print(acceleration)
+        return newNode
+    return False
 
 def isNearNodeToNewNodeAnglePossible(child, parent):
     grandparent = parent.parent
     if calculateAngle((grandparent.x,grandparent.y),(parent.x, parent.y),(child.x, child.y)) < 120:
-        
+            
         return False
     else:
         
