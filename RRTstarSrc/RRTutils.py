@@ -45,7 +45,7 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
         if distance is not None and velocity is not None:
             intNodes.append(Node(x, y, velocity))
 
-    intNodeInTime = [node for node in intNodes if getTimeSteer(node, nearestNode) < stepSize]
+    intNodeInTime = [node for node in intNodes if (getTimeSteer(node, nearestNode) < stepSize) and (getDistance(node,nearestNode) > 0)]
 
     if not intNodeInTime:
         return False
@@ -56,19 +56,29 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
 def getPossibleMaxVelocityWithAngle(child, degree):
     tempNode = Node(child.x, child.y, child.velocity)
     
-    if degree >= 120 and degree <= 180:
+    if degree >= 145 and degree <= 180:
         # degree가 120도에서 180도 사이인 경우
         # 비율을 계산해서 반환 (120도는 10%, 180도는 100%)
-        ratio = (degree - 120) / 60  # 120도는 10%, 180도는 100%
+        ratio = (degree - 145) / 35  # 120도는 10%, 180도는 100%
         tempNode.velocity = 3 + ratio * 38
 
         return tempNode
     else:
-        print("fuck case occured!")
-        print(child.x, child.y, child.velocity)
-        print(degree)
+
         # 그 외의 경우에는 None 또는 다른 예외 처리를 수행
-        return None  # 또는 예외를 발생시킴
+        return False  # 또는 예외를 발생시킴
+    
+def getPossibleAccelWithoutDegree(newNode,nearestNode):
+    maxAccel = 3.026 #100km/h/3.6/9.18s = 3.026m/(s^2)
+    newAccel = (newNode.velocity - nearestNode.velocity) / getTimeSteer(newNode, nearestNode)
+
+    if newAccel < maxAccel:
+        
+        return newAccel
+        
+    else:
+        
+        return maxAccel
 
 def getPossibleAccel(newNode,nearestNode,degree):
 
@@ -170,15 +180,22 @@ def calculateAngle(p1, p2, p3):
 
 def fitNewNodeVelocity (nearNode, newNode):
     
-    degree = calculateSignedAngle((nearNode.parent.x,nearNode.parent.y),(nearNode.x,nearNode.y),(newNode.x,newNode.y))
+    degree = calculateAngle((nearNode.parent.x,nearNode.parent.y),(nearNode.x,nearNode.y),(newNode.x,newNode.y))
     tempNode = getPossibleMaxVelocityWithAngle(newNode,degree)
-    if newNode.velcoity < tempNode.velocity:
+    if newNode.velocity < tempNode.velocity:
         tempNode = newNode
     return tempNode
 
-def isNearNodeVelocityPossible (nearNode,degree):
+def isNearNodeVelocityPossible (nearNode,newNode, degree):
     tempNode = getPossibleMaxVelocityWithAngle(nearNode,degree)
-    if tempNode.velocity >= nearNode:
+    if tempNode and tempNode.velocity >= nearNode.velocity:
+        for child in nearNode.children:
+            degreeForChild = calculateAngle((newNode.x,newNode.y),(nearNode.x,nearNode.y),(child.x,child.y))
+            tempNodeForChild = getPossibleMaxVelocityWithAngle(child,degreeForChild)
+            if not tempNodeForChild:
+                return False
+            if tempNodeForChild.velocity < child.velocity:
+                return False
         return True
     else:
         return False
@@ -201,7 +218,7 @@ def updateChildCost(node, cost):
 
 def save_to_excel(tree, map_data, scaler, fileNum):
     # Convert tree data to a DataFrame
-    fileName = "/home/esl/kyuyong/RRTstar/result3/" + str(fileNum) + "output.xlsx"
+    fileName = "/home/esl/kyuyong/RRTstar/result4/" + str(fileNum) + "output.xlsx"
     
     tree_data = []
     for index, node in enumerate(tree):

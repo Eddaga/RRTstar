@@ -49,7 +49,7 @@ def rrtStar(nodes, start, stepSize, possibleVelocity, mapData, scaler, goal, thr
             
             nodes.append(newNode)
             hit = hit+1
-            #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
+            plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
                 #if newNode and isGoalReached(newNode, goal, threshold):
                 #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
                 #print("total E = ", int(getTotalPower(start,newNode,goal)),"W")

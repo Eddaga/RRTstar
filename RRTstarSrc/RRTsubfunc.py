@@ -16,7 +16,7 @@ def getRandomNode(mapData, possibleVelocity):
 
 # this function is consider for all nodes.
 def getNearestNode(nodes, randNode):
-    nearestNode = min((node for node in nodes if getTimeSteer(node, randNode) > 0), 
+    nearestNode = min((node for node in nodes if (getTimeSteer(node, randNode) > 0) and (getDistance(node,randNode) > 0)), 
                       key=lambda node: getTimeSteer(node, randNode), default=None)
     return nearestNode
 
@@ -40,16 +40,21 @@ def getNewNode(nearestNode, randNode, stepSize, scaler):
     newNode = Node(nearestNode.x, nearestNode.y, nearestNode.velocity) # create new node and init as dummy value.
     timeSteer = getTimeSteer(randNode, nearestNode)
     degree = 0
-    if timeSteer == float('inf'):
+    if timeSteer == float('inf'): # which means newNode and nearestNode at same position
+        print("asldkfjalskdjfas")
         return False
-    if nearestNode.parent is not None:
-        degree = calculateAngle((nearestNode.parent.x, nearestNode.parent.y), (nearestNode.x, nearestNode.y), (randNode.x, randNode.y))
-    
+        '''if nearestNode.parent is None: # if newNode's coordination is at startNode
+            return False
+        else: # if same coordination with different velocity that is on integer num
+            if nearestNode.velocity == randNode.velocity: # if same, don't append
+                return False
+            else: # else, check degree just return that node.
+                print("herererere!!")
+                return newNode'''
     # get nearestNode From Real Number
-    if nearestNode.parent is None or degree >= 120:
-        
+    if nearestNode.parent is None: # if parentNode is nearestNode, it's dont need to think about angle.
         if timeSteer > stepSize:
-            acceleration = getPossibleAccel(randNode,nearestNode, degree)
+            acceleration = getPossibleAccelWithoutDegree(randNode,nearestNode)
             deltaVelocity = nearestNode.velocity + acceleration * stepSize # acceleration * domain time = get delta velocity.
             deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * stepSize # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
             distance = getDistance(randNode, nearestNode)
@@ -58,10 +63,8 @@ def getNewNode(nearestNode, randNode, stepSize, scaler):
             newNode.velocity = deltaVelocity
             #print(acceleration)
             newNode = newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize)
-            
-            
         else:
-            acceleration = getPossibleAccel(randNode,nearestNode, degree)
+            acceleration = getPossibleAccelWithoutDegree(randNode,nearestNode)
             deltaVelocity = nearestNode.velocity + acceleration * timeSteer # acceleration * domain time = get delta velocity.
             deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * timeSteer # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
             distance = getDistance(randNode, nearestNode)
@@ -71,16 +74,47 @@ def getNewNode(nearestNode, randNode, stepSize, scaler):
             newNode = newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize)
             #print(acceleration)
         return newNode
-    return False
+    else:   
+        degree = calculateAngle((nearestNode.parent.x, nearestNode.parent.y), (nearestNode.x, nearestNode.y), (randNode.x, randNode.y))
+        if degree >= 145 and degree <= 180:
+            if timeSteer > stepSize:
+                acceleration = getPossibleAccel(randNode,nearestNode, degree)
+                deltaVelocity = nearestNode.velocity + acceleration * stepSize # acceleration * domain time = get delta velocity.
+                deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * stepSize # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
+                distance = getDistance(randNode, nearestNode)
+                newNode.x += (randNode.x - nearestNode.x) * deltaDistance / distance # dx * ( distance / delta Distance) -> x + delta x
+                newNode.y += (randNode.y - nearestNode.y) * deltaDistance / distance # dy * ( distance / delta Distance) -> y + delta y
+                newNode.velocity = deltaVelocity
+                #print(acceleration)
+                newNode = newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize)
+                if newNode and  145 > calculateAngle((nearestNode.parent.x, nearestNode.parent.y), (nearestNode.x, nearestNode.y), (newNode.x, newNode.y)):
+                    return False
+                
+            else:
+                acceleration = getPossibleAccel(randNode,nearestNode, degree)
+                deltaVelocity = nearestNode.velocity + acceleration * timeSteer # acceleration * domain time = get delta velocity.
+                deltaDistance = (deltaVelocity + nearestNode.velocity) / 2 * timeSteer # delta velocity + nearestNode's velocity / 2  * domain time -> avg velocity * domain time -> delta distance.
+                distance = getDistance(randNode, nearestNode)
+                newNode.x += (randNode.x - nearestNode.x) * deltaDistance / distance # dx * ( distance / delta Distance) -> x + delta x
+                newNode.y += (randNode.y - nearestNode.y) * deltaDistance / distance # dy * ( distance / delta Distance) -> y + delta y
+                newNode.velocity = deltaVelocity
+                newNode = newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize)
+                if newNode and 145 > calculateAngle((nearestNode.parent.x, nearestNode.parent.y), (nearestNode.x, nearestNode.y), (newNode.x, newNode.y)):
+                    return False
+                #print(acceleration)
+            return newNode
+        else:
+            return False
+
 
 def isNearNodeToNewNodeAnglePossible(child, parent):
     grandparent = parent.parent
-    if calculateAngle((grandparent.x,grandparent.y),(parent.x, parent.y),(child.x, child.y)) < 120:
+    if (145 <= calculateAngle((grandparent.x,grandparent.y),(parent.x, parent.y),(child.x, child.y)) < 180):
             
-        return False
+        return True
     else:
         
-        return True
+        return False
 
 #deal with integrize
 def isNodeOnObstacle(newNode, MapData):
@@ -147,18 +181,20 @@ def selectNewParentNode(nearestNode, newNode, nearNodes):
 
     for nearNode in nearNodes:
         if nearNode.parent is None:
-            if isNodeAccelOk(nearNode, newNode): 
-                tempCost = nearNode.cost + getTimeSteer(nearNode, newNode)
-                if tempCost < minCost:
-                    minCost = tempCost
-                    minNode = nearNode
-        if nearNode.parent is not None and isNearNodeToNewNodeAnglePossible(newNode, nearNode):
-            newNode = fitNewNodeVelocity(nearNode, newNode)
-            if isNodeAccelOk(nearNode, newNode): 
-                tempCost = nearNode.cost + getTimeSteer(nearNode, newNode)
-                if tempCost < minCost:
-                    minCost = tempCost
-                    minNode = nearNode
+            tempCost = nearNode.cost + getTimeSteer(nearNode, newNode)
+            if tempCost < minCost:
+                minCost = tempCost
+                minNode = nearNode
+        if nearNode.parent is not None:
+            degree = calculateAngle((nearNode.parent.x,nearNode.parent.y),(nearNode.x,nearNode.y),(newNode.x,newNode.y))
+            if 145 <= degree <= 180:
+                tempNewNode = fitNewNodeVelocity(nearNode, newNode)
+                if isNodeAccelOk(nearNode, tempNewNode): 
+                    tempCost = nearNode.cost + getTimeSteer(nearNode, tempNewNode)
+                    if tempCost < minCost:
+                        minCost = tempCost
+                        minNode = nearNode
+                        newNode.velocity = tempNewNode.velocity
 
     newNode.cost = minCost
     if newNode.parent:
@@ -168,24 +204,25 @@ def selectNewParentNode(nearestNode, newNode, nearNodes):
     updateChildCost(newNode, newNode.cost)
 
 ## have to fix this func
-def rewireNearNodes(nearNodes, newNode):
+def rewireNearNodes(nearNodes, newNode, start):
     for nearNode in nearNodes:
-        if newNode.parent is None:
-            tempCostWithNewNode = newNode.cost + getTimeSteer(newNode, nearNode)
-            if tempCostWithNewNode < nearNode.cost:
-            # Update the parent of the nearNode
-                if nearNode.parent:
-                    nearNode.parent.children.remove(nearNode)  # Remove nearNode from the old parent's children list
-                nearNode.parent = newNode
-                newNode.children.append(nearNode)  # Add nearNode to the new parent's children list
+        if getDistance(start,nearNode) > 0:
+            '''if newNode.parent.parent is None:
+                print("hello!")
+                tempCostWithNewNode = newNode.cost + getTimeSteer(newNode, nearNode)
+                if tempCostWithNewNode < nearNode.cost:
+                # Update the parent of the nearNode
+                    if nearNode.parent:
+                        nearNode.parent.children.remove(nearNode)  # Remove nearNode from the old parent's children list
+                    nearNode.parent = newNode
+                    newNode.children.append(nearNode)  # Add nearNode to the new parent's children list
 
-                # Update the cost of nearNode and recursively update the costs of all its descendants
-                nearNode.cost = tempCostWithNewNode
-                updateChildCost(nearNode, tempCostWithNewNode)
+                    # Update the cost of nearNode and recursively update the costs of all its descendants
+                    nearNode.cost = tempCostWithNewNode
+                    updateChildCost(nearNode, tempCostWithNewNode)'''
 
-        else: #newNode.parent is not None:
             degree = calculateAngle((newNode.parent.x,newNode.parent.y),(newNode.x,newNode.y),(nearNode.x,nearNode.y))
-            if degree > 120 and isNearNodeVelocityPossible(nearNode, degree):
+            if 145 <= degree <= 180 and isNearNodeVelocityPossible(nearNode,newNode, degree):
                 tempCostWithNewNode = newNode.cost + getTimeSteer(newNode, nearNode)
                 if tempCostWithNewNode < nearNode.cost:
                     # Update the parent of the nearNode

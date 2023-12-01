@@ -4,17 +4,17 @@ from RRT import *
 import sys
 import select
 import pandas as pd
-
+from datetime import datetime
 
 def main():
-    start = Node(880, 630, 1 )
+    start = Node(890, 630, 1 )
     goal = Node(880,550, 0)
-    stepSize = 3#0.5
+    stepSize = 4#0.5
     mapMaxSize = [1200, 1200]
     possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
     threshold = 50 #for isGoalReached(euclidian distance)
     mapPath = "../mapImage/9track2.png"
-    realDistance = 12000
+    realDistance = 1200
     # tree = treeLoader()
 
     
@@ -50,10 +50,16 @@ def main():
         else:
             print("enter correct num please.")
 
+    start_time = datetime.now()    
     tree, hit = rrtStar(tree, start,  stepSize,  possibleVelocity, mapData, scaler, goal, threshold,binaryImage)
+    end_time = datetime.now()
+
+    elasped_time =  end_time - start_time
+    elasped_time_sum = elasped_time
     totalHit = totalHit + hit
     save_to_excel(tree,mapData,scaler,totalHit)
-    print(totalHit)
+    print("\n", totalHit," ", elasped_time_sum)
+    
     i = 1
     while True:
         #user_input = get_input_with_timeout("1 set iteration end. If you wan to stop, enter something within 1 seconds: ", 0.1)
@@ -61,15 +67,20 @@ def main():
         #    print(f"You entered: {user_input}")
         #    break
         #else:
+        start_time = datetime.now()  
         tree, hit = rrtStar(tree, start,  stepSize,  possibleVelocity, mapData, scaler, goal, threshold,binaryImage)
+        end_time = datetime.now()
+        elasped_time =  end_time - start_time  
         totalHit = totalHit + hit
-        print(totalHit)
-        if totalHit == 100:
+        elasped_time_sum = elasped_time_sum + elasped_time
+        
+        print("\n", totalHit," ", elasped_time_sum)
+        if totalHit % 1000 == 0 and totalHit < 10000:
             save_to_excel(tree,mapData,scaler,totalHit)
-        if totalHit == 5000:
-            save_to_excel(tree,mapData,scaler,totalHit)
+
         if totalHit == 10000*i:
             save_to_excel(tree,mapData,scaler,totalHit)
+
             i = i+1
         
     

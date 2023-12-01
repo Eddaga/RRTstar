@@ -4,24 +4,12 @@ from RRT import *
 import sys
 import select
 import pandas as pd
-from importAndExport import *
+
 
 def main():
-    # 1. get power and make power consume less
-        # 1.1 Load Optimal Path
-    optimalPath = loadPath(5000)
-        # 2. check Power
-    E = getTotalPower(optimalPath)
-    print(E, optimalPath[len(optimalPath) -1 ].cost)
-    #130680000W/s
-    print(130680000 / optimalPath[len(optimalPath) -1 ].cost)
-
-    exit()            
-        # 2. make less power and make tree as possible.
-    # 2. 
     start = Node(880, 630, 1 )
     goal = Node(880,550, 0)
-    stepSize = 2.3#0.5
+    stepSize = 3#0.5
     mapMaxSize = [1200, 1200]
     possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
     threshold = 50 #for isGoalReached(euclidian distance)
@@ -76,7 +64,10 @@ def main():
         tree, hit = rrtStar(tree, start,  stepSize,  possibleVelocity, mapData, scaler, goal, threshold,binaryImage)
         totalHit = totalHit + hit
         print(totalHit)
-
+        if totalHit == 100:
+            save_to_excel(tree,mapData,scaler,totalHit)
+        if totalHit == 1000:
+            save_to_excel(tree,mapData,scaler,totalHit)
         if totalHit == 5000:
             save_to_excel(tree,mapData,scaler,totalHit)
         if totalHit == 10000*i:
@@ -122,3 +113,5 @@ if __name__ == "__main__":
     
 
     main()
+
+    

@@ -38,16 +38,15 @@ def rrtStar(nodes, start, stepSize, possibleVelocity, mapData, scaler, goal, thr
         randNode = getRandomNode(mapData, possibleVelocity)
         
         nearestNode = getNearestNode(nodes, randNode)
-        
-        newNode = getNewNode(nearestNode, randNode, stepSize, scaler)
-        
-        # Check if newNode is valid and obstacle-free
-        if newNode and isNewNodeObstacleFree(newNode, nearestNode, mapData,  binaryImage):
-
-            nearNodes = getNearNodes(nodes, newNode, stepSize,binaryImage)
-            if not nearNodes:
+        if nearestNode is not None:
+            newNode = getNewNode(nearestNode, randNode, stepSize, scaler)
+            
+            # Check if newNode is valid and obstacle-free
+            if newNode and isNewNodeObstacleFree(newNode, nearestNode, mapData,  binaryImage):
+                nearNodes = getNearNodes(nodes, newNode, stepSize,binaryImage)
+                #if len(nearNodes) != 0:
                 selectNewParentNode(nearestNode, newNode, nearNodes)
-                rewireNearNodes(nearNodes, newNode)
+                rewireNearNodes(nearNodes, newNode, start)
                 
                 nodes.append(newNode)
                 hit = hit+1
@@ -57,7 +56,6 @@ def rrtStar(nodes, start, stepSize, possibleVelocity, mapData, scaler, goal, thr
                     #print("total E = ", int(getTotalPower(start,newNode,goal)),"W")
                     #print("total T = ", int(newNode.cost),"sec")
                     #print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
-                print(hit)
 
                 if hit == 1000:
                     #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
@@ -65,18 +63,18 @@ def rrtStar(nodes, start, stepSize, possibleVelocity, mapData, scaler, goal, thr
                     #print("total T = ", int(newNode.cost),"sec")
                     #print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
                     return nodes, hit
-            
-            
-
-    # Check if the goal is reached
-            #if newNode and isGoalReached(newNode, goal, threshold):
-                #print("Goal reached!")
-                #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
                 
-                #print("total E = ", int(getTotalPower(start,newNode,goal)),"W")
-                #print("total T = ", int(newNode.cost),"sec")
-                #print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
-                #return nodes
+                
+
+        # Check if the goal is reached
+                #if newNode and isGoalReached(newNode, goal, threshold):
+                    #print("Goal reached!")
+                    #plot_tree(nodes, newNode, mapData, goal)  # 현재 트리를 플롯
+                    
+                    #print("total E = ", int(getTotalPower(start,newNode,goal)),"W")
+                    #print("total T = ", int(newNode.cost),"sec")
+                    #print("E / T = ",int(getTotalPower(start,newNode,goal) / newNode.cost), "W/s")
+                    #return nodes
     
       
 
