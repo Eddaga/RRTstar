@@ -56,10 +56,10 @@ def newNodeIntegrization(newNode, scaler, nearestNode, acceleration, stepSize):
 def getPossibleMaxVelocityWithAngle(child, degree):
     tempNode = Node(child.x, child.y, child.velocity)
     
-    if degree >= 145 and degree <= 180:
+    if degree >= 135 and degree <= 180:
         # degree가 120도에서 180도 사이인 경우
         # 비율을 계산해서 반환 (120도는 10%, 180도는 100%)
-        ratio = (degree - 145) / 35  # 120도는 10%, 180도는 100%
+        ratio = (degree - 135) / 45  # 120도는 10%, 180도는 100%
         tempNode.velocity = 3 + ratio * 38
 
         return tempNode
