@@ -56,7 +56,7 @@ def energyCalculator(inputData):
 
     #get P
     with torch.no_grad():
-        E = model(inputData)
+        P = model(inputData)
 
-    return E.cpu().detach().numpy()
+    return P.cpu().detach().numpy()
 

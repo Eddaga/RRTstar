@@ -1,117 +1,78 @@
+from GPANP import *
+from MLP import *
 
-from getMap import *
-from RRT import *
-import sys
-import select
-import pandas as pd
 
+pd.set_option('mode.chained_assignment',  None) # <==== 경고를 끈다
 
 def main():
-    start = Node(880, 630, 1 )
-    goal = Node(880,550, 0)
-    stepSize = 3#0.5
-    mapMaxSize = [1200, 1200]
-    possibleVelocity = 41# 150.0 km/h * 100 / 3600 = 41.16667m/s
-    threshold = 50 #for isGoalReached(euclidian distance)
-    mapPath = "../mapImage/9track2.png"
-    realDistance = 1200
-    # tree = treeLoader()
+    fileName = "/home/esl/kyuyong/RRTstar/foundPath/10000pathNodes.xlsx"
+    fileSavePath1 = "/home/esl/kyuyong/RRTstar/Power/Full10000.xlsx"
+    fileSavePath2 = "/home/esl/kyuyong/RRTstar/Power/Cut10000.xlsx"
+    expectedPower = 1400000
+    # 1. load Path Data
+    data = removeRowsAfterCostDecreases(loadPathData(fileName))
+    T = np.diff(data['Cost'])
+    T = np.insert(T,0,0)
+    # 2. make MLP data from Path data
+    accelerations = getAccelerations(data)
+    pedalIntensities = getPedalIntensity(accelerations)
+    velocity = data['Velocity']
+    angle = calculateAngle(data)
+    dataForMLP = list(zip(pedalIntensities,velocity,angle))
+
+    # 3. calculate Power for Each Node and Save
+    P = energyCalculator(dataForMLP).flatten()
+    saveNodesPower(P,fileSavePath1)
 
     
+    # 4. get total E!
 
-    print("RRTstar Algorithm Start. Please Load MapData Please")
-    binaryImage, mapData, scaler = getMapData(mapPath,realDistance)
-     
-    
-    plt.ion()  # 인터랙티브 플로팅 시작
-    plt.xlim([0, 1200])
-    plt.ylim([0, 1200])
-  
-    #plotMap(mapData)
-    
-    
-    hit = 0
-    totalHit = 0        
-    print("Load Exist Tree or Make New Tree?")
-    while 1:
+    E = sum(P * T)
 
-        print("Load = 0, New = 1")
-        a = int(input("method :: "))
-        if a == 0:
-            print("load exist tree data")
-            #tree = loadTree()
-            break
+    print(E)
 
-        elif a == 1:
-            print("make new tree")
-            tree = [start]
-            break
-
-        else:
-            print("enter correct num please.")
-
-    tree, hit = rrtStar(tree, start,  stepSize,  possibleVelocity, mapData, scaler, goal, threshold,binaryImage)
-    totalHit = totalHit + hit
-    save_to_excel(tree,mapData,scaler,totalHit)
-    print(totalHit)
-    i = 1
+    # 5. if Power is Larger than we expected, minus 1 node's velocity
     while True:
-        #user_input = get_input_with_timeout("1 set iteration end. If you wan to stop, enter something within 1 seconds: ", 0.1)
-        #if user_input:
-        #    print(f"You entered: {user_input}")
-        #    break
-        #else:
-        tree, hit = rrtStar(tree, start,  stepSize,  possibleVelocity, mapData, scaler, goal, threshold,binaryImage)
-        totalHit = totalHit + hit
-        print(totalHit)
-        if totalHit == 100:
-            save_to_excel(tree,mapData,scaler,totalHit)
-        if totalHit == 1000:
-            save_to_excel(tree,mapData,scaler,totalHit)
-        if totalHit == 5000:
-            save_to_excel(tree,mapData,scaler,totalHit)
-        if totalHit == 10000*i:
-            save_to_excel(tree,mapData,scaler,totalHit)
-            i = i+1
         
+
+        velocityAdjusted = False
+        for i in range(len(data) - 1, -1, -1):
+            if data['Velocity'].iloc[i] > 2:
+                data['Velocity'].iloc[i]  = data['Velocity'].iloc[i] - 1  # 속도 감소
+                velocityAdjusted = True
+
+                # Recalculate power and energy from this node to the end
+                for j in range(i, len(data) - 1):
+                    distance = np.sqrt((data['X'].iloc[j + 1] - data['X'].iloc[j])**2 + (data['Y'].iloc[j + 1] - data['Y'].iloc[j])**2)
+                    avg_velocity = (data['Velocity'].iloc[j] + data['Velocity'].iloc[j + 1]) / 2
+                    T[j + 1] = distance / avg_velocity
+                
+                dataForMLP = list(zip(getPedalIntensity(getAccelerations(data)), data['Velocity'], calculateAngle(data)))
+                #dataForMLP = list(zip(pedalIntensities, data['Velocity'], calculateAngle(data)))
+
+                dataForMLP[0] = (0,1.0,0)
+                P = energyCalculator(dataForMLP).flatten()
+                E = sum(P * T)
+
+                if E <= expectedPower:
+                    saveUpdatedNodesPowerAndVelocityCost(P,data['Velocity'],T, calculateCost(T),fileSavePath2)
+                    a = getPedalIntensity(getAccelerations(data))
+                    a[0] = 0
+                    print(max(a))
+                    print(max(pedalIntensities))
+                    print(sum(T))
+                    return
+        
+
+        if not velocityAdjusted:
+            print("Unable to reduce power to expected level")
+            break  # 모든 노드의 속도가 2 이하이면 반복을 중단합니다.
     
-def get_input_with_timeout(prompt, timeout):
-    print(prompt,flush=True)
-    ready, _, _ = select.select([sys.stdin], [], [], timeout)
-    if ready:
-        return sys.stdin.readline().strip()
-    return None
-
-
-def plotMap(mapData):
-
-    # 흑색 픽셀과 백색 픽셀의 위치 목록을 얻습니다.
-    blackList, whiteList = mapData
-    #print(len(blackList))
-    # 흑색 픽셀을 그립니다.
-    xCoords = []
-    yCoords = []
-
-    # Loop through each point in the blackList
-    for point in whiteList:
-  
-
-        x = point[0]
-        xCoords.append(x)  
-        
-        y = point[1]
-        yCoords.append(y) 
-
-    # Plot all points at once
-    plt.scatter(xCoords, yCoords, c='black', s=1)  # s is the size of the point
-    plt.pause(0.01)
-    # Show the plot   
-
-
+    
 
 if __name__ == "__main__":
-    
-
     main()
+
+
 
     
