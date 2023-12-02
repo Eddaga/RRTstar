@@ -50,15 +50,17 @@ def main():
         else:
             print("enter correct num please.")
 
-    start_time = datetime.now()    
+    start_time = datetime.now()
+    time_string = start_time.strftime("%Y-%m-%d %H:%M:%S")
+    print(time_string)    
     tree, hit = rrtStar(tree, start,  stepSize,  possibleVelocity, mapData, scaler, goal, threshold,binaryImage)
     end_time = datetime.now()
-
+    time_string = end_time.strftime("%Y-%m-%d %H:%M:%S")
     elasped_time =  end_time - start_time
     elasped_time_sum = elasped_time
     totalHit = totalHit + hit
     save_to_excel(tree,mapData,scaler,totalHit)
-    print("\n", totalHit," ", elasped_time_sum)
+    print("\n", totalHit," ", elasped_time_sum,time_string)
     
     i = 1
     while True:
@@ -73,8 +75,9 @@ def main():
         elasped_time =  end_time - start_time  
         totalHit = totalHit + hit
         elasped_time_sum = elasped_time_sum + elasped_time
-        
-        print("\n", totalHit," ", elasped_time_sum)
+
+        time_string = end_time.strftime("%Y-%m-%d %H:%M:%S")
+        print("\n", totalHit," ", elasped_time_sum,time_string)
         if totalHit % 1000 == 0 and totalHit < 10000:
             save_to_excel(tree,mapData,scaler,totalHit)
 

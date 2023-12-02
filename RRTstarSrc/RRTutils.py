@@ -57,10 +57,10 @@ def getPossibleMaxVelocityWithAngle(child, degree):
     tempNode = Node(child.x, child.y, child.velocity)
     
     if degree >= 135 and degree <= 180:
-        # degree가 120도에서 180도 사이인 경우
-        # 비율을 계산해서 반환 (120도는 10%, 180도는 100%)
-        ratio = (degree - 135) / 45  # 120도는 10%, 180도는 100%
-        tempNode.velocity = 3 + ratio * 38
+        # degree가 135도에서 180도 사이인 경우
+        # 비율을 계산해서 반환 (135도는 10%, 180도는 100%)
+        ratio = (degree - 135) / 45  # 135도는 10%, 180도는 100%
+        tempNode.velocity = 6 + ratio * (41 - 6 )
 
         return tempNode
     else:
@@ -218,7 +218,7 @@ def updateChildCost(node, cost):
 
 def save_to_excel(tree, map_data, scaler, fileNum):
     # Convert tree data to a DataFrame
-    fileName = "/home/esl/kyuyong/RRTstar/result4/" + str(fileNum) + "output.xlsx"
+    fileName = "/home/esl/kyuyong/RRTstar/result5/" + str(fileNum) + "output.xlsx"
     
     tree_data = []
     for index, node in enumerate(tree):

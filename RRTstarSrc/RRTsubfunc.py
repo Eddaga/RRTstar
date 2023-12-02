@@ -15,25 +15,26 @@ def getRandomNode(mapData, possibleVelocity):
     return randomNode
 
 # this function is consider for all nodes.
-def getNearestNode(nodes, randNode):
+'''def getNearestNode(nodes, randNode):
     nearestNode = min((node for node in nodes if (getTimeSteer(node, randNode) > 0) and (getDistance(node,randNode) > 0)), 
                       key=lambda node: getTimeSteer(node, randNode), default=None)
-    return nearestNode
+    return nearestNode'''
 
 
 
-'''def getNearestNode(nodes, randNode):
+def getNearestNode(nodes, randNode):
     nearestNode = None
     minTimeSteer = float('inf')
 
     for node in nodes:
-        if node.parent is None or (node.parent is not None and calculateAngle((node.parent.x,node.parent.y),(node.x,node.y),(randNode.x,randNode.y)) > 120):
+        if node.parent is None or (node.parent is not None and 135 <= calculateAngle((node.parent.x,node.parent.y),(node.x,node.y),(randNode.x,randNode.y)) <= 180):
             timeSteer = getTimeSteer(node, randNode)
             if timeSteer > 0 and timeSteer < minTimeSteer:
-                nearestNode = node
-                minTimeSteer = timeSteer
+                if getDistance(node,randNode) > 0:
+                    nearestNode = node
+                    minTimeSteer = timeSteer
 
-    return nearestNode'''
+    return nearestNode
 
 #deal with integrize
 def getNewNode(nearestNode, randNode, stepSize, scaler):
@@ -231,15 +232,16 @@ def rewireNearNodes(nearNodes, newNode, start):
             if 135 <= degree <= 180 and isNearNodeVelocityPossible(nearNode,newNode, degree):
                 tempCostWithNewNode = newNode.cost + getTimeSteer(newNode, nearNode)
                 if tempCostWithNewNode < nearNode.cost:
-                    # Update the parent of the nearNode
-                    if nearNode.parent:
-                        nearNode.parent.children.remove(nearNode)  # Remove nearNode from the old parent's children list
-                    nearNode.parent = newNode
-                    newNode.children.append(nearNode)  # Add nearNode to the new parent's children list
+                    if isNodeAccelOk(nearNode, newNode): 
+                        # Update the parent of the nearNode
+                        if nearNode.parent:
+                            nearNode.parent.children.remove(nearNode)  # Remove nearNode from the old parent's children list
+                        nearNode.parent = newNode
+                        newNode.children.append(nearNode)  # Add nearNode to the new parent's children list
 
-                    # Update the cost of nearNode and recursively update the costs of all its descendants
-                    nearNode.cost = tempCostWithNewNode
-                    updateChildCost(nearNode, tempCostWithNewNode)
+                        # Update the cost of nearNode and recursively update the costs of all its descendants
+                        nearNode.cost = tempCostWithNewNode
+                        updateChildCost(nearNode, tempCostWithNewNode)
 
 
 
