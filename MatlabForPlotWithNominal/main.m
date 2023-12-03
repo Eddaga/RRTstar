@@ -1,4 +1,4 @@
-treenum = 20000;
+treenum = 10000;
 
 
 %% Laod TreeData
@@ -21,10 +21,10 @@ treenum = 20000;
     nodeNearGoal = nodeNearGoal{1};
     %%
     getPathNodeAndSave(nodes{1}, nodeNearGoal,treenum);
-    xMax = 900;
-    yMin = 520;
+    xMax = 1000;
+    yMin = 530;
 
-    xMin = 875;
-    yMax = 549;
+    xMin = 865;
+    yMax = 560;
     rectangle('Position', [xMin, yMin, xMax-xMin, yMax-yMin], 'EdgeColor', 'r', 'FaceColor', 'r', 'LineWidth', 2);
 

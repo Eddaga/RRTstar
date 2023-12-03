@@ -3,7 +3,7 @@ function plotPath(pathNodes)
         currentNode = pathNodes{i};
         
         nextNode = pathNodes{i + 1};
-        nextNode = nextNode;
+        
         plotSteer(currentNode, nextNode); % Use your existing plotSteer function
         %plotNode(currentNode); % Use your existing plotNode function
     end
@@ -27,7 +27,7 @@ function plotSteer(currentNode, nextNode)
     color = color(normalizedIndex, :);
 
     %선을 그립니다.
-    line([currentNode.x, nextNode.x], [currentNode.y, nextNode.y], 'Color',color , 'LineWidth', 3);
+    line([currentNode.x, nextNode.x], [currentNode.y, nextNode.y], 'Color',color , 'LineWidth', 5);
 end
 
 function plotNode(node)

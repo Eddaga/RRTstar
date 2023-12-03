@@ -5,9 +5,9 @@ function plotTree(node)
     img = imread("/home/esl/kyuyong/RRTstar/mapImage/9track2Outlined4.png");
     imagesc(img)
     set(gca, 'YDir', 'normal'); % Y축 방향을 일반적인 그래프 방향으로 변경
-    set(gca, 'FontName', 'Times New Roman', 'FontSize', 12); % 틱 레이블 글꼴 설정
+    set(gca, 'FontName', 'Times New Roman','FontWeight','bold', 'FontSize', 20); % 틱 레이블 글꼴 설정
     set(gca, 'TickLength', [0.02 0.025]); % 틱 라인 길이 변경
-    set(gcf, 'Position', [100, 100, 1000, 1000]); % 피규어 위치와 크기 설정
+    set(gcf, 'Position', [100, 100, 1000, 800]); % 피규어 위치와 크기 설정
 
 
     axis image
@@ -15,8 +15,8 @@ function plotTree(node)
     hold on;
     colormap(jet(41));
 
-    xlabel('Distance (m)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 12); % X축 레이블 추가
-    ylabel('Distance (m)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 12); % Y축 레이블 추가
+    xlabel('X axis (m)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 20); % X축 레이블 추가
+    ylabel('Y axis (m)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 20); % Y축 레이블 추가
     
     minVelocity = 0;  % Adjust this value based on your data
     maxVelocity = 150;  % Adjust this value based on your data
@@ -24,7 +24,7 @@ function plotTree(node)
     clim([minVelocity maxVelocity]);
     h = colorbar;
     
-    ylabel(h, 'Velocity (km/h)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 12);
+    ylabel(h, 'Velocity (km/h)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 20);
     
     %figureTitle = ('PathHeuristic RRT*');
     %title(figureTitle)

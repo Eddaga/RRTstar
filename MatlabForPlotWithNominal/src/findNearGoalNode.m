@@ -1,11 +1,11 @@
 function smallestCostNodeNearGoal = findNearGoalNode(nodes)
     % Define the area limits
     
-    xMax = 900;
-    yMin = 520;
+    xMax = 1000;
+    yMin = 530;
 
-    xMin = 875;
-    yMax = 549;
+    xMin = 865;
+    yMax = 560;
 
     % Initialize variables
     smallestCost = Inf;

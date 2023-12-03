@@ -62,7 +62,7 @@ function plotSteer(currentNode, nextNode)
 
 
     %선을 그립니다.
-    line([currentNode.x, nextNode.x], [currentNode.y, nextNode.y], 'Color','b' , 'LineWidth', 3);
+    line([currentNode.x, nextNode.x], [currentNode.y, nextNode.y], 'Color','r' , 'LineWidth', 6);
 end
 
 function plotNode(node)
