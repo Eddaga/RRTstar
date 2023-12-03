@@ -42,8 +42,8 @@ def energyCalculator(inputData):
             out = self.fc2(out)
             return out
 
-    input_scaler = MinMaxScaler()
-    inputData = input_scaler.fit_transform(inputData)
+    #input_scaler = MinMaxScaler()
+    #inputData = input_scaler.fit_transform(inputData)
 
     # Move data to device
     inputData = torch.tensor(inputData, dtype=torch.float32).to(device)

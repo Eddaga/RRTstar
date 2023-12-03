@@ -22,10 +22,9 @@ def getAccelerations(data):
     accelerations = np.nan_to_num(accelerations, nan=0.0)
     return accelerations
 
-def getPedalIntensity(acceleration):
-    pedal_intensities = np.abs(acceleration) / 5
-    pedal_intensities = np.clip(pedal_intensities, 0, 1)  # Clipping between 0 and 1
-
+def getPedalIntensity(velocity, acceleration,coefficients):
+    pedal_intensities = coefficients[0] + coefficients[1] * velocity + coefficients[2] * acceleration
+    
     return pedal_intensities
 
 def removeRowsAfterCostDecreases(data):
@@ -87,3 +86,24 @@ def saveUpdatedNodesPowerAndVelocityCost(powers,velocities,times,cost,fileName):
                         'Cost': cost})
     df.to_excel(fileName, index=False)
 
+def normalizerForDataForMLP(pedalPress, velocity, angle):
+    maxPedalPress = 3.3166
+    minPedalPress = 0.0934
+    
+    maxVelocity = 41
+    minVelocity = -1.1530
+
+    maxAngle = max(angle)
+    minAngle = min(angle)
+
+    nrdPedalPress = (pedalPress - minPedalPress) / (maxPedalPress - minPedalPress)
+    nrdVelocity = (velocity - minVelocity) / (maxVelocity - minVelocity)
+    nrdAngle = (angle - minAngle) / (maxAngle - minAngle)
+
+    normalizedDataForMLP = list(zip(nrdPedalPress,nrdVelocity,nrdAngle))
+
+    
+
+
+
+    return normalizedDataForMLP

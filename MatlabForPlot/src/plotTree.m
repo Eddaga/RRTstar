@@ -1,45 +1,36 @@
 function plotTree(node)
     figure;
-
+    
     % Load and display the image
     img = imread("/home/esl/kyuyong/RRTstar/mapImage/9track2Outlined4.png");
+    imagesc(img)
+    set(gca, 'YDir', 'normal'); % Y축 방향을 일반적인 그래프 방향으로 변경
+    set(gca, 'FontName', 'Times New Roman', 'FontSize', 12); % 틱 레이블 글꼴 설정
+    set(gca, 'TickLength', [0.02 0.025]); % 틱 라인 길이 변경
+    set(gcf, 'Position', [100, 100, 1000, 1000]); % 피규어 위치와 크기 설정
 
-    imshow(img, 'InitialMagnification', 'fit');
+
+    axis image
+    %imshow(img, 'InitialMagnification', 'fit');
     hold on;
     colormap(jet(41));
 
-    % Define the velocity range
+    xlabel('Distance (m)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 12); % X축 레이블 추가
+    ylabel('Distance (m)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 12); % Y축 레이블 추가
+    
     minVelocity = 0;  % Adjust this value based on your data
-    maxVelocity = 41;  % Adjust this value based on your data
+    maxVelocity = 150;  % Adjust this value based on your data
 
-    % Set the color axis for the velocity range
     clim([minVelocity maxVelocity]);
     h = colorbar;
     
-    ylabel(h, 'Velocity');
-    % %Define the grid spacing
-    % gridSpacing = 10;
-    % 
-    % %Get the size of the image
-    % [rows, cols] = size(img);
-    % graynum = 169/255;
-    % grayLine = [graynum graynum graynum];
-    % % Draw the grid lines
-    % for i = 1:gridSpacing:cols
-    %     line([i, i], [1, rows], 'Color', grayLine, 'LineWidth', 0.5); % Vertical lines
-    % end
-    % for j = 1:gridSpacing:rows
-    %     line([1, cols], [j, j], 'Color', grayLine, 'LineWidth', 0.5); % Horizontal lines
-    % end
-
-    % Plot the tree
+    ylabel(h, 'Velocity (km/h)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 12);
     
-    %preOrderTraversal(node);
-
-    % Collect line information
+    %figureTitle = ('PathHeuristic RRT*');
+    %title(figureTitle)
+    
     lines = collectLines(node);
 
-    % Plot all lines and nodes
     plotLinesAndNodes(lines);
 
     
@@ -69,7 +60,7 @@ function plotLinesAndNodes(lines)
         x2 = lineInfo(2);
         y1 = lineInfo(3);
         y2 = lineInfo(4);
-        plot([x1, x2], [y1, y2], 'k', 'LineWidth', 0.1);
+        plot([x1, x2], [y1, y2], 'k', 'LineWidth', 0.01);
     end
 
     % Plot all nodes
