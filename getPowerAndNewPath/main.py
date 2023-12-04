@@ -5,9 +5,9 @@ from MLP import *
 pd.set_option('mode.chained_assignment',  None) # <==== 경고를 끈다
 
 def main():
-    fileName = "/home/esl/kyuyong/RRTstar/foundPath/20000pathNodes.xlsx"
-    fileSavePath1 = "/home/esl/kyuyong/RRTstar/Power/Full10000.xlsx"
-    fileSavePath2 = "/home/esl/kyuyong/RRTstar/Power/Cut10000.xlsx"
+    fileName = "/home/esl/kyuyong/RRTstar/foundPath/50000pathNodes.xlsx"
+    fileSavePath1 = "/home/esl/kyuyong/RRTstar/Power/Full50000.xlsx"
+    fileSavePath2 = "/home/esl/kyuyong/RRTstar/Power/Cut50000.xlsx"
     expectedPower = 5000000
     coefficients = [0.7074,0.0324,0.0580]
 

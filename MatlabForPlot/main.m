@@ -1,4 +1,12 @@
-treenum = 10000;
+treenum = 50000;
+
+
+set(0, 'defaultUicontrolFontName', 'Times New Roman');
+set(0, 'defaultUitableFontName', 'Times New Roman');
+set(0, 'defaultAxesFontName', 'Times New Roman');
+set(0, 'defaultTextFontName', 'Times New Roman');
+set(0, 'defaultUipanelFontName', 'Times New Roman');
+% or any of the following...
 
 
 %% Laod TreeData
@@ -24,7 +32,7 @@ treenum = 10000;
 
     
     %%
-    plotPath(pathNodes);
+    TotalDistance = plotPath(pathNodes);
     xMax = 1000;
     yMin = 530;
 
@@ -173,6 +181,15 @@ for i = 1:length(pathNodes) - 1
         
         line([pathNodes{1,i}.x, pathNodes{1,i+1}.x],[pathNodes{1,i}.y, pathNodes{1,i+1}.y], 'Color',color , 'LineWidth', 6);
 end
+    annotationText = sprintf('Total Distance: %.2f (m)', TotalDistance);
+
+    % 텍스트 상자 추가
+    annotation('textbox', [0.2, 0.8, 0.1, 0.1], 'String', annotationText, ...
+    'FontSize', 19, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
+    'FontName', 'Times New Roman');
+    
+    hold off; % 그래프 유지 해제
+
 
 %%
 % 피규어 크기 설정 및 축 틱 길이, 폰트 설정

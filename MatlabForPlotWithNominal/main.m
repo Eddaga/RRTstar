@@ -28,3 +28,4 @@ treenum = 10000;
     yMax = 560;
     rectangle('Position', [xMin, yMin, xMax-xMin, yMax-yMin], 'EdgeColor', 'r', 'FaceColor', 'r', 'LineWidth', 2);
 
+

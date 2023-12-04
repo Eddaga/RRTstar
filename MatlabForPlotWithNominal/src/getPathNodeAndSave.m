@@ -7,6 +7,16 @@ function getPathNodeAndSave(startNode, goalNode,fileNum)
     else
         disp('No suitable goal node found.');
     end
+    annotationText = sprintf('Total Distance: %.2f (m)', pathNodes{end}.cost);
+
+    % 텍스트 상자 추가
+    annotation('textbox', [0.2, 0.8, 0.1, 0.1], 'String', annotationText, ...
+    'FontSize', 19, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
+    'FontName', 'Times New Roman');
+    
+    hold off; % 그래프 유지 해제
+
+
 end
 
 function pathNodes = traceBackPath(goalNode, startNode)
@@ -36,7 +46,7 @@ function plotPath(pathNodes)
         %plotNode(currentNode); % Use your existing plotNode function
     end
     %plotNode(pathNodes{end}); % Plot the last node
-    hold off
+    
 end
 
 function saveNodesToExcel(pathNodes, fileName)

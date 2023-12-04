@@ -1,14 +1,23 @@
-function plotPath(pathNodes)
+function TotalDistance = plotPath(pathNodes)
+    
+    TotalDistance = 0;
     for i = 1:length(pathNodes) - 1
         currentNode = pathNodes{i};
-        
+        TotalDistance = TotalDistance + sqrt((pathNodes{1,i+1}.x - pathNodes{1,i}.x)^2 + (pathNodes{1,i+1}.y - pathNodes{1,i}.y)^2);
         nextNode = pathNodes{i + 1};
         
         plotSteer(currentNode, nextNode); % Use your existing plotSteer function
         %plotNode(currentNode); % Use your existing plotNode function
     end
     %plotNode(pathNodes{end}); % Plot the last node
-    hold off
+    annotationText = sprintf('Total Distance: %.2f (m)', TotalDistance);
+
+    % 텍스트 상자 추가
+    annotation('textbox', [0.2, 0.8, 0.1, 0.1], 'String', annotationText, ...
+    'FontSize', 19, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
+    'FontName', 'Times New Roman');
+    
+    hold off; % 그래프 유지 해제
 end
 
 function plotSteer(currentNode, nextNode)
