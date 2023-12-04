@@ -1,4 +1,4 @@
-treenum = 10000;
+treenum = 50000;
 
 
 %% Laod TreeData

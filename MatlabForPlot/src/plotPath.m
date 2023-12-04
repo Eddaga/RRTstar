@@ -10,11 +10,11 @@ function TotalDistance = plotPath(pathNodes)
         %plotNode(currentNode); % Use your existing plotNode function
     end
     %plotNode(pathNodes{end}); % Plot the last node
-    annotationText = sprintf('Total Distance: %.2f (m)', TotalDistance);
+    annotationText = sprintf('Total Distance: %.2f m\nTotal Time : %.2f s', TotalDistance, pathNodes{end}.cost);
 
     % 텍스트 상자 추가
-    annotation('textbox', [0.2, 0.8, 0.1, 0.1], 'String', annotationText, ...
-    'FontSize', 19, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
+    annotation('textbox', [0.15, 0.85, 0.1, 0.1], 'String', annotationText, ...
+    'FontSize', 30, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
     'FontName', 'Times New Roman');
     
     hold off; % 그래프 유지 해제

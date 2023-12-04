@@ -70,13 +70,13 @@ cumulativeTime = cumsum(T);
 figure('Position', [100, 100, 1000, 800]); % 위치와 크기 설정
 ax = gca; % 현재 축 핸들
 ax.TickLength = [0.02 0.025]; % 틱 길이 조정
-set(ax, 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 20); % 폰트 설정
+set(ax, 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 30); % 폰트 설정
 clim([0 150]);
 colormap(jet(41));
 h = colorbar;
 
-%ylabel(h, 'Velocity (km/h)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 20);
-ylabel(h, 'Velocity (km/h)','FontName', 'Times New Roman', 'FontSize', 20);
+%ylabel(h, 'Velocity (km/h)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 30);
+ylabel(h, 'Velocity (km/h)','FontName', 'Times New Roman', 'FontSize', 30);
 % 전체 트렌드를 나타내는 plot
 %plot(cumulativeTime, accumulateE, 'b', 'LineWidth', 2); % 파란색 선, 굵은 선
 hold on; % 현재 그래프 유지
@@ -107,8 +107,8 @@ end
 
 
 % 축 레이블 추가
-xlabel('Time (s)', 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 20); % X축 레이블
-ylabel('Accumulated Energy (kWs)', 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 20); % Y축 레이블
+xlabel('Time (s)', 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 30); % X축 레이블
+ylabel('Consumed Energy (kWs)', 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 30); % Y축 레이블
 
 % Y축 틱 값 조정
 yticks(0:1000:7000); % 0부터 70까지 10 단위로 틱 설정
@@ -116,11 +116,11 @@ yticklabels(arrayfun(@(x) sprintf('%d', x), 0:1000:7000, 'UniformOutput', false)
 
 finalTime = cumulativeTime(end);
 finalEnergy = accumulateE(end);
-annotationText = sprintf('Total Time: %.2f s\nAccumulated Energy: %.2f kWs', finalTime, finalEnergy);
+annotationText = sprintf('Total Time: %.2f s\nConsumed Energy: %.2f kWs', finalTime, finalEnergy);
 
 % 텍스트 상자 추가
 annotation('textbox', [0.15, 0.8, 0.1, 0.1], 'String', annotationText, ...
-    'FontSize', 19, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
+    'FontSize', 30, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
     'FontName', 'Times New Roman');
 
 hold off; % 그래프 유지 해제
@@ -181,11 +181,11 @@ for i = 1:length(pathNodes) - 1
         
         line([pathNodes{1,i}.x, pathNodes{1,i+1}.x],[pathNodes{1,i}.y, pathNodes{1,i+1}.y], 'Color',color , 'LineWidth', 6);
 end
-    annotationText = sprintf('Total Distance: %.2f (m)', TotalDistance);
+    annotationText = sprintf('Total Distance: %.2f m', TotalDistance);
 
     % 텍스트 상자 추가
     annotation('textbox', [0.2, 0.8, 0.1, 0.1], 'String', annotationText, ...
-    'FontSize', 19, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
+    'FontSize', 30, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
     'FontName', 'Times New Roman');
     
     hold off; % 그래프 유지 해제
@@ -196,13 +196,13 @@ end
 figure('Position', [100, 100, 1000, 800]); % 위치와 크기 설정
 ax = gca; % 현재 축 핸들
 ax.TickLength = [0.02 0.025]; % 틱 길이 조정
-set(ax, 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 20); % 폰트 설정
+set(ax, 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 30); % 폰트 설정
 clim([0 150]);
 colormap(jet(41));
 h = colorbar;
 
-%ylabel(h, 'Velocity (km/h)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 20);
-ylabel(h, 'Velocity (km/h)','FontName', 'Times New Roman', 'FontSize', 20);
+%ylabel(h, 'Velocity (km/h)','FontName', 'Times New Roman','FontWeight', 'bold', 'FontSize', 30);
+ylabel(h, 'Velocity (km/h)','FontName', 'Times New Roman', 'FontSize', 30);
 % 전체 트렌드를 나타내는 plot
 %plot(cumulativeTime, accumulateE, 'b', 'LineWidth', 2); % 파란색 선, 굵은 선
 hold on; % 현재 그래프 유지
@@ -233,8 +233,8 @@ end
 
 
 % 축 레이블 추가
-xlabel('Time (s)', 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 20); % X축 레이블
-ylabel('Accumulated Energy (kWs)', 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 20); % Y축 레이블
+xlabel('Time (s)', 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 30); % X축 레이블
+ylabel('Consumed Energy (kWs)', 'FontName', 'Times New Roman', 'FontWeight', 'bold', 'FontSize', 30); % Y축 레이블
 
 % Y축 틱 값 조정
 yticks(0:1000:7000); % 0부터 70까지 10 단위로 틱 설정
@@ -242,11 +242,11 @@ yticklabels(arrayfun(@(x) sprintf('%d', x), 0:1000:7000, 'UniformOutput', false)
 
 sFinalTime = sCumulativeTime(end);
 sFinalEnergy = sAccumulateE(end);
-annotationText = sprintf('Total Time: %.2f s\nAccumulated Energy: %.2f kWs', sFinalTime, sFinalEnergy);
+annotationText = sprintf('Total Time: %.2f s\nConsumed Energy: %.2f kWs', sFinalTime, sFinalEnergy);
 
 % 텍스트 상자 추가
 annotation('textbox', [0.15, 0.8, 0.1, 0.1], 'String', annotationText, ...
-    'FontSize', 19, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
+    'FontSize', 30, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
     'FontName', 'Times New Roman');
 
 hold off; % 그래프 유지 해제

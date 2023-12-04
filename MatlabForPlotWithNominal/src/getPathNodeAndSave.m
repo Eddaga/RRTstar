@@ -7,11 +7,11 @@ function getPathNodeAndSave(startNode, goalNode,fileNum)
     else
         disp('No suitable goal node found.');
     end
-    annotationText = sprintf('Total Distance: %.2f (m)', pathNodes{end}.cost);
+    annotationText = sprintf('Total Distance: %.2f m', pathNodes{end}.cost);
 
     % 텍스트 상자 추가
-    annotation('textbox', [0.2, 0.8, 0.1, 0.1], 'String', annotationText, ...
-    'FontSize', 19, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
+    annotation('textbox', [0.25, 0.8, 0.1, 0.1], 'String', annotationText, ...
+    'FontSize', 30, 'FontWeight', 'bold', 'EdgeColor', 'k', 'BackgroundColor', 'white', ...
     'FontName', 'Times New Roman');
     
     hold off; % 그래프 유지 해제
