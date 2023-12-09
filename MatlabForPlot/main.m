@@ -1,4 +1,4 @@
-treenum = 50000;
+treenum = 80000;
 
 
 set(0, 'defaultUicontrolFontName', 'Times New Roman');
@@ -116,7 +116,7 @@ yticklabels(arrayfun(@(x) sprintf('%d', x), 0:1000:7000, 'UniformOutput', false)
 
 finalTime = cumulativeTime(end);
 finalEnergy = accumulateE(end);
-annotationText = sprintf('Total Time: %.2f s\nConsumed Energy: %.2f kWs', finalTime, finalEnergy);
+annotationText = sprintf('Total Time: %.2f s\nConsumed Energy: %d kWs', finalTime, round(finalEnergy));
 
 % 텍스트 상자 추가
 annotation('textbox', [0.15, 0.8, 0.1, 0.1], 'String', annotationText, ...
@@ -242,7 +242,7 @@ yticklabels(arrayfun(@(x) sprintf('%d', x), 0:1000:7000, 'UniformOutput', false)
 
 sFinalTime = sCumulativeTime(end);
 sFinalEnergy = sAccumulateE(end);
-annotationText = sprintf('Total Time: %.2f s\nConsumed Energy: %.2f kWs', sFinalTime, sFinalEnergy);
+annotationText = sprintf('Total Time: %.2f s\nConsumed Energy: %d kWs', sFinalTime, round(sFinalEnergy));
 
 % 텍스트 상자 추가
 annotation('textbox', [0.15, 0.8, 0.1, 0.1], 'String', annotationText, ...

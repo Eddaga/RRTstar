@@ -31,7 +31,7 @@ def main():
     saveNodesPower(P,fileSavePath1)
 
     
-    # 4. get total E!
+    # 4. get total E!git 
 
     E = sum(P * T)
 

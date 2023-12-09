@@ -214,20 +214,6 @@ def selectNewParentNode(nearestNode, newNode, nearNodes):
 def rewireNearNodes(nearNodes, newNode, start):
     for nearNode in nearNodes:
         if getDistance(start,nearNode) > 0:
-            '''if newNode.parent.parent is None:
-                print("hello!")
-                tempCostWithNewNode = newNode.cost + getTimeSteer(newNode, nearNode)
-                if tempCostWithNewNode < nearNode.cost:
-                # Update the parent of the nearNode
-                    if nearNode.parent:
-                        nearNode.parent.children.remove(nearNode)  # Remove nearNode from the old parent's children list
-                    nearNode.parent = newNode
-                    newNode.children.append(nearNode)  # Add nearNode to the new parent's children list
-
-                    # Update the cost of nearNode and recursively update the costs of all its descendants
-                    nearNode.cost = tempCostWithNewNode
-                    updateChildCost(nearNode, tempCostWithNewNode)'''
-
             degree = calculateAngle((newNode.parent.x,newNode.parent.y),(newNode.x,newNode.y),(nearNode.x,nearNode.y))
             if 135 <= degree <= 180 and isNearNodeVelocityPossible(nearNode,newNode, degree):
                 tempCostWithNewNode = newNode.cost + getTimeSteer(newNode, nearNode)
